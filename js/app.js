@@ -185,6 +185,7 @@ class RakhiApp {
   }
 
   initQuiz() {
+    if (!CONFIG.quiz || !CONFIG.quiz.questions || !document.getElementById('quizQuestionContainer')) return;
     this.quizState.currentIndex = 0;
     this.quizState.score = 0;
     this.renderCurrentQuestion();
