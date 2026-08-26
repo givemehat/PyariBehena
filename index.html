@@ -60,58 +60,19 @@
   <link rel="stylesheet" href="css/animations.css">
 </head>
 
-<body class="festive-bg relative text-zinc-800 antialiased selection:bg-rose-500 selection:text-white pb-16">
+<body class="festive-bg relative text-zinc-800 antialiased selection:bg-rose-500 selection:text-white pb-20">
 
   <!-- Falling Flower Petals Canvas -->
   <canvas id="petalCanvas"></canvas>
 
   <!-- ==========================================
-       STICKY LIVE EDITOR TOOLBAR (ACTIVE IN EDIT MODE)
-       ========================================== -->
-  <div id="liveEditorToolbar" class="hidden sticky top-0 z-50 bg-zinc-900/95 text-white backdrop-blur-md px-4 py-2.5 shadow-2xl border-b border-amber-400/30">
-    <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-2">
-        <span class="text-amber-400 text-lg animate-pulse">✏️</span>
-        <span class="text-xs font-bold uppercase tracking-wider text-amber-300">Live Edit Mode Active</span>
-        <span class="text-[11px] text-zinc-400 hidden sm:inline">• Click on any text or photo to edit!</span>
-      </div>
-
-      <div class="flex items-center gap-2 flex-wrap">
-        <button onclick="window.rakhiApp.generateAndCopyShareUrl()" class="py-1.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow flex items-center gap-1 transition">
-          <span>🔗</span> Get Share Link
-        </button>
-        <button onclick="window.rakhiApp.shareOnWhatsApp()" class="py-1.5 px-3 bg-green-500 hover:bg-green-600 text-white font-bold text-xs rounded-lg shadow flex items-center gap-1 transition">
-          <span>💬</span> WhatsApp
-        </button>
-        <button onclick="window.rakhiApp.downloadConfigFile()" class="py-1.5 px-3 bg-zinc-800 hover:bg-zinc-700 text-amber-300 border border-amber-400/40 font-bold text-xs rounded-lg shadow flex items-center gap-1 transition">
-          <span>⬇️</span> Download config.js
-        </button>
-        <button onclick="window.rakhiApp.toggleEditMode()" class="py-1.5 px-3 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-lg shadow flex items-center gap-1 transition">
-          <span>👁️</span> Done (Preview)
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==========================================
-       FLOATING PERSONALIZE & EDIT BUTTON
+       FLOATING PERSONALIZE & CREATE BUTTON
        ========================================== -->
   <div class="fixed bottom-5 left-5 z-50">
-    <button id="liveEditToggleBtn" class="px-4 py-2.5 bg-gradient-to-r from-rose-700 to-amber-600 hover:from-rose-800 hover:to-amber-700 text-white font-bold text-xs rounded-full shadow-2xl flex items-center gap-2 border border-amber-300 hover:scale-105 active:scale-95 transition-all">
-      <span>✨</span>
+    <button onclick="window.rakhiApp.openPersonalizeModal()" class="px-4 py-2.5 bg-gradient-to-r from-rose-700 to-amber-600 hover:from-rose-800 hover:to-amber-700 text-white font-bold text-xs rounded-full shadow-2xl flex items-center gap-2 border border-amber-300 hover:scale-105 active:scale-95 transition-all">
+      <span class="text-sm">✨</span>
       <span>Personalize & Create</span>
     </button>
-  </div>
-
-  <!-- ==========================================
-       AUTOPLAY UNLOCK PROMPT TOAST
-       ========================================== -->
-  <div id="musicPromptToast" class="hidden opacity-0 fixed top-14 left-1/2 -translate-x-1/2 z-50 transition-opacity duration-500 max-w-sm w-[90%] pointer-events-none">
-    <div class="bg-zinc-900/90 text-white backdrop-blur-md px-4 py-2.5 rounded-full shadow-2xl flex items-center justify-center gap-2 text-xs font-medium border border-white/20 text-center animate-bounce-subtle">
-      <span>🎵</span>
-      <span>Tap anywhere to enable music</span>
-      <span>🌸</span>
-    </div>
   </div>
 
   <!-- ==========================================
@@ -128,6 +89,17 @@
   </div>
 
   <!-- ==========================================
+       AUTOPLAY UNLOCK PROMPT TOAST
+       ========================================== -->
+  <div id="musicPromptToast" class="hidden opacity-0 fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-opacity duration-500 max-w-sm w-[90%] pointer-events-none">
+    <div class="bg-zinc-900/90 text-white backdrop-blur-md px-4 py-2 rounded-full shadow-2xl flex items-center justify-center gap-2 text-xs font-medium border border-white/20 text-center animate-bounce-subtle">
+      <span>🎵</span>
+      <span>Tap anywhere to enable music</span>
+      <span>🌸</span>
+    </div>
+  </div>
+
+  <!-- ==========================================
        TOP BAR
        ========================================== -->
   <header class="w-full sticky top-0 z-40 backdrop-blur-md bg-white/80 border-b border-amber-200/50 px-4 py-3.5 shadow-sm">
@@ -139,12 +111,14 @@
         </span>
       </div>
 
-      <nav class="flex items-center gap-5 text-xs sm:text-sm font-medium text-zinc-700">
-        <a href="#letterSection" class="hover:text-rose-600 transition-colors">💌 Letter</a>
-        <a href="#memoriesSection" class="hover:text-rose-600 transition-colors">📸 Yaadein</a>
-        <a href="#vouchersSection" class="hover:text-rose-600 transition-colors">🎟️ Vouchers</a>
-        <a href="#shagunSection" class="hover:text-rose-600 transition-colors">🎁 Shagun</a>
-      </nav>
+      <div class="flex items-center gap-3">
+        <button onclick="window.rakhiApp.openPersonalizeModal()" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold rounded-lg transition">
+          ✏️ Edit Name/Photos
+        </button>
+        <button onclick="window.rakhiApp.shareOnWhatsApp()" class="hidden sm:flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow transition">
+          <span>💬</span> Share
+        </button>
+      </div>
     </div>
   </header>
 
@@ -155,20 +129,20 @@
     <!-- Heartfelt Sibling Badge -->
     <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-rose-100 via-amber-50 to-rose-100 border border-amber-300 shadow-sm text-xs font-semibold text-rose-800 mb-5 animate-float">
       <span>✨</span>
-      <span id="heroBadgeText" class="conf-relation-badge editable-field">World's Best Sister Ever 👑</span>
+      <span id="heroBadgeText" class="conf-relation-badge">World's Best Sister Ever 👑</span>
       <span>✨</span>
     </div>
 
     <!-- Main Heading (Fluid Responsive) -->
     <h1 id="heroHeading" class="fluid-heading font-bold font-decorative maroon-gradient-text tracking-wide mb-3">
-      Happy Rakhi, <span class="conf-sister-name gold-gradient-text editable-field">Gudiya</span>! 🌸
+      Happy Rakhi, <span class="conf-sister-name gold-gradient-text">Gudiya</span>! 🌸
     </h1>
 
-    <p id="heroTagline" class="editable-field text-base sm:text-lg text-zinc-700 font-medium max-w-xl mx-auto mb-2 leading-relaxed">
+    <p id="heroTagline" class="text-base sm:text-lg text-zinc-700 font-medium max-w-xl mx-auto mb-2 leading-relaxed">
       Chahe hum kitne bhi door kyu na ho, tera bhai hamesha tere dil ke sabse paas hai! ❤️
     </p>
 
-    <p id="heroSubtext" class="editable-field text-xs sm:text-sm text-zinc-500 max-w-md mx-auto mb-6 italic">
+    <p id="heroSubtext" class="text-xs sm:text-sm text-zinc-500 max-w-md mx-auto mb-6 italic">
       Tere liye ek chhota sa digital surprise banaya hai, scroll karke dekh... ✨
     </p>
 
@@ -230,11 +204,11 @@
       <!-- Letter Header -->
       <div class="flex items-center justify-between border-b border-amber-100 pb-3 mb-5">
         <div>
-          <span id="letterTag" class="editable-field text-[10px] font-bold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded border border-rose-200">
+          <span id="letterTag" class="text-[10px] font-bold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded border border-rose-200">
             For My Dearest Sister
           </span>
           <h3 class="font-heading font-bold text-base sm:text-lg text-zinc-900 mt-1">
-            Pyari <span class="conf-sister-name editable-field">Gudiya</span> ❤️
+            Pyari <span class="conf-sister-name">Gudiya</span> ❤️
           </h3>
         </div>
         <div class="wax-seal" title="Seal of Love">
@@ -242,14 +216,14 @@
         </div>
       </div>
 
-      <!-- Letter Body (Editable Paragraphs) -->
+      <!-- Letter Body -->
       <div id="letterBodyContent" class="space-y-3.5 text-zinc-700 leading-relaxed font-sans text-sm sm:text-base">
         <!-- Dynamic paragraphs from config.js -->
       </div>
 
       <!-- Brotherly Promises -->
       <div class="mt-6 pt-5 border-t border-dashed border-amber-200">
-        <h4 id="letterPromisesHeader" class="editable-field text-xs font-bold uppercase tracking-wider text-amber-800 mb-2.5">
+        <h4 id="letterPromisesHeader" class="text-xs font-bold uppercase tracking-wider text-amber-800 mb-2.5">
           🤞 Bhai ke 4 Pakke Wade (Promises)
         </h4>
         <ul id="letterPromisesList" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -260,7 +234,7 @@
       <!-- Signature -->
       <div class="mt-7 text-right font-handwriting">
         <p class="text-zinc-500 text-xs sm:text-sm">Hamesha tera khayal rakhne wala,</p>
-        <p id="letterSignature" class="conf-brother-name editable-field text-2xl sm:text-3xl font-bold text-rose-700 mt-0.5">
+        <p id="letterSignature" class="conf-brother-name text-2xl sm:text-3xl font-bold text-rose-700 mt-0.5">
           Tera Bhai ❤️
         </p>
       </div>
@@ -279,12 +253,12 @@
         📸 Hamari Pyari Yaadein
       </h2>
       <p class="text-xs sm:text-sm text-zinc-600 max-w-md mx-auto mt-1">
-        Bachpan ki ladai se lekar aaj tak ki mastiyaan! Photo par tap karke dekhein ya edit karein:
+        Bachpan ki ladai se lekar aaj tak ki mastiyaan!
       </p>
     </div>
 
     <div id="memoriesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Dynamic memories from config.js with live photo change buttons -->
+      <!-- Dynamic memories from config.js -->
     </div>
   </section>
 
@@ -330,7 +304,7 @@
 
         <div>
           <h3 class="text-lg font-bold font-heading text-zinc-900">Bhai's Rakhi Treat</h3>
-          <p id="shagunGiftNote" class="editable-field text-xs sm:text-sm text-zinc-600 mt-1">
+          <p id="shagunGiftNote" class="text-xs sm:text-sm text-zinc-600 mt-1">
             Yeh shagun tumhari manpasand shopping aur treats ke liye hai. Love you always!
           </p>
         </div>
@@ -339,7 +313,7 @@
         <div class="p-3.5 bg-amber-50 rounded-xl border-2 border-dashed border-amber-300 flex items-center justify-between">
           <div class="text-left">
             <span class="text-[9px] font-bold text-zinc-400 uppercase">Shopping Voucher</span>
-            <div id="shagunGiftCode" class="editable-field text-sm sm:text-base font-extrabold text-rose-700 font-mono tracking-wider">
+            <div id="shagunGiftCode" class="text-sm sm:text-base font-extrabold text-rose-700 font-mono tracking-wider">
               RAKHI-2026-BHAI-TREAT
             </div>
           </div>
@@ -355,12 +329,87 @@
             <img id="shagunQrImage" src="" alt="UPI QR" loading="lazy" class="w-full h-full object-contain">
           </div>
           <p class="text-[10px] text-zinc-500 mt-1.5 font-mono">
-            UPI: <span id="shagunUpiText" class="editable-field font-bold text-zinc-800">brother@upi</span>
+            UPI: <span id="shagunUpiText" class="font-bold text-zinc-800">brother@upi</span>
           </p>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- ==========================================
+       PERSONALIZE & CREATE MODAL
+       ========================================== -->
+  <div id="personalizeModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md items-center justify-center p-4 overflow-y-auto">
+    <div class="relative max-w-lg w-full bg-white rounded-3xl p-6 shadow-2xl space-y-5 my-8 animate-fadeIn max-h-[90vh] overflow-y-auto border-2 border-amber-300">
+      
+      <div class="flex items-center justify-between border-b pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🌸</span>
+          <h3 class="font-heading font-bold text-lg text-zinc-900">Personalize Your Sister's Gift</h3>
+        </div>
+        <button onclick="window.rakhiApp.closePersonalizeModal()" class="w-8 h-8 rounded-full bg-zinc-100 text-zinc-600 hover:bg-zinc-200 flex items-center justify-center font-bold">
+          ✕
+        </button>
+      </div>
+
+      <!-- Quick Form -->
+      <div class="space-y-4 text-left">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">Sister's Name *</label>
+            <input type="text" id="modalSisterName" value="Gudiya" class="w-full p-2.5 rounded-xl border text-xs focus:border-rose-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">Brother's Name *</label>
+            <input type="text" id="modalBrotherName" value="Tera Bhai" class="w-full p-2.5 rounded-xl border text-xs focus:border-rose-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-zinc-600 mb-1">Brother's WhatsApp Number (For Voucher Claim)</label>
+          <input type="text" id="modalWhatsappNumber" value="919876543210" placeholder="919876543210" class="w-full p-2.5 rounded-xl border text-xs focus:border-rose-500 focus:outline-none">
+        </div>
+
+        <!-- 4 Photo Uploaders -->
+        <div>
+          <label class="block text-xs font-semibold text-zinc-600 mb-1.5">Change Scrapbook Photos (Choose any image)</label>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="p-2 border rounded-xl bg-zinc-50 text-center">
+              <span class="text-[10px] font-bold text-zinc-500 block mb-1">Photo 1 (Childhood)</span>
+              <input type="file" accept="image/*" onchange="window.rakhiApp.handleModalPhoto(0, event)" class="w-full text-[10px] text-zinc-500 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:bg-rose-100 file:text-rose-800">
+            </div>
+            <div class="p-2 border rounded-xl bg-zinc-50 text-center">
+              <span class="text-[10px] font-bold text-zinc-500 block mb-1">Photo 2 (Fight/Masti)</span>
+              <input type="file" accept="image/*" onchange="window.rakhiApp.handleModalPhoto(1, event)" class="w-full text-[10px] text-zinc-500 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:bg-rose-100 file:text-rose-800">
+            </div>
+            <div class="p-2 border rounded-xl bg-zinc-50 text-center">
+              <span class="text-[10px] font-bold text-zinc-500 block mb-1">Photo 3 (Festive)</span>
+              <input type="file" accept="image/*" onchange="window.rakhiApp.handleModalPhoto(2, event)" class="w-full text-[10px] text-zinc-500 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:bg-rose-100 file:text-rose-800">
+            </div>
+            <div class="p-2 border rounded-xl bg-zinc-50 text-center">
+              <span class="text-[10px] font-bold text-zinc-500 block mb-1">Photo 4 (Bond)</span>
+              <input type="file" accept="image/*" onchange="window.rakhiApp.handleModalPhoto(3, event)" class="w-full text-[10px] text-zinc-500 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:bg-rose-100 file:text-rose-800">
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-zinc-600 mb-1">UPI ID (Optional)</label>
+          <input type="text" id="modalUpiId" value="brother@upi" placeholder="yourname@upi" class="w-full p-2.5 rounded-xl border text-xs focus:border-rose-500 focus:outline-none">
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="space-y-2 pt-2">
+        <button onclick="window.rakhiApp.applyModalChanges()" class="w-full py-3 bg-gradient-to-r from-rose-600 to-amber-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg hover:brightness-110 active:scale-95 transition">
+          ✨ Apply & View My Personalized Gift
+        </button>
+        <button onclick="window.rakhiApp.shareOnWhatsAppFromModal()" class="w-full py-2.5 bg-emerald-600 text-white font-bold text-xs rounded-xl shadow flex items-center justify-center gap-1.5 hover:bg-emerald-700 transition">
+          <span>💬</span> Send Directly on WhatsApp to Sister
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- ==========================================
        PHOTO LIGHTBOX MODAL
@@ -389,9 +438,9 @@
       Made with immense love for <span class="conf-sister-name font-bold text-rose-700">Gudiya</span> • Happy Raksha Bandhan ❤️
     </p>
     <div>
-      <a href="generator.html" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-semibold text-[11px] rounded-full shadow-sm transition">
+      <button onclick="window.rakhiApp.openPersonalizeModal()" class="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-semibold text-[11px] rounded-full shadow-sm transition">
         <span>✨</span> Want to surprise your sister? Create yours free!
-      </a>
+      </button>
     </div>
   </footer>
 

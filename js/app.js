@@ -1,12 +1,12 @@
 /**
  * ===================================================================
- * 🌸 PYARI BEHENA - MAIN APP, LIVE IN-PLACE EDITOR & DATA BINDING
+ * 🌸 PYARI BEHENA - MAIN APP & PERSONALIZE MODAL SYSTEM
  * ===================================================================
  */
 
 class RakhiApp {
   constructor() {
-    this.isEditMode = false;
+    this.tempModalPhotos = [];
     this.loadUrlConfig();
     this.init();
   }
@@ -41,7 +41,6 @@ class RakhiApp {
     this.initAudioPlayer();
     this.renderLetter();
     this.renderMemories();
-    this.initLiveEditor();
     this.bindGlobalEvents();
   }
 
@@ -182,14 +181,14 @@ class RakhiApp {
     if (signature && CONFIG.letter.signature) signature.innerText = CONFIG.letter.signature;
 
     if (letterBody && Array.isArray(CONFIG.letter.paragraphs)) {
-      letterBody.innerHTML = CONFIG.letter.paragraphs.map((p, idx) => `
-        <p data-letter-idx="${idx}" class="editable-field text-zinc-700 leading-relaxed text-sm sm:text-base font-normal">${p}</p>
+      letterBody.innerHTML = CONFIG.letter.paragraphs.map(p => `
+        <p class="text-zinc-700 leading-relaxed text-sm sm:text-base font-normal">${p}</p>
       `).join('');
     }
 
     if (promisesList && Array.isArray(CONFIG.letter.promises)) {
-      promisesList.innerHTML = CONFIG.letter.promises.map((item, idx) => `
-        <li data-promise-idx="${idx}" class="editable-field flex items-center gap-2 text-xs sm:text-sm text-rose-800 font-medium bg-rose-50/90 p-2.5 rounded-xl border border-rose-200/60 shadow-sm">
+      promisesList.innerHTML = CONFIG.letter.promises.map(item => `
+        <li class="flex items-center gap-2 text-xs sm:text-sm text-rose-800 font-medium bg-rose-50/90 p-2.5 rounded-xl border border-rose-200/60 shadow-sm">
           <span>${item}</span>
         </li>
       `).join('');
@@ -214,25 +213,17 @@ class RakhiApp {
       card.innerHTML = `
         <div class="relative overflow-hidden rounded-md bg-amber-50 aspect-[4/3]">
           <img id="memory-img-${index}" src="${imgSrc}" alt="${title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80'">
-          
-          <!-- In-Place Photo Change Button (Shown on Edit Mode or Hover) -->
-          <div class="photo-upload-overlay absolute inset-0 bg-black/50 opacity-0 flex flex-col items-center justify-center text-white transition-opacity gap-1 cursor-pointer" onclick="window.rakhiApp.triggerPhotoUpload(${index}, event)">
-            <span class="text-xl">📷</span>
-            <span class="text-[11px] font-bold bg-white/20 px-2 py-0.5 rounded-full backdrop-blur-sm">Click to Change Photo</span>
-          </div>
-
           <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
-            <span data-mem-date-idx="${index}" class="editable-field">${date}</span>
+            ${date}
           </div>
         </div>
         <div class="mt-3 text-center">
-          <h4 data-mem-title-idx="${index}" class="editable-field font-heading font-bold text-zinc-800 text-sm sm:text-base mt-1">${title}</h4>
-          <p data-mem-caption-idx="${index}" class="editable-field font-handwriting text-zinc-600 text-sm sm:text-base mt-0.5 leading-snug">${caption}</p>
+          <h4 class="font-heading font-bold text-zinc-800 text-sm sm:text-base mt-1">${title}</h4>
+          <p class="font-handwriting text-zinc-600 text-sm sm:text-base mt-0.5 leading-snug">${caption}</p>
         </div>
       `;
 
-      card.addEventListener('click', (e) => {
-        if (e.target.closest('.photo-upload-overlay') || this.isEditMode) return;
+      card.addEventListener('click', () => {
         if (window.soundSystem && typeof window.soundSystem.playClick === 'function') {
           window.soundSystem.playClick();
         }
@@ -243,198 +234,121 @@ class RakhiApp {
     });
   }
 
-  /* ─── IN-PLACE PHOTO UPLOADER & COMPRESSION ─── */
-  triggerPhotoUpload(index, event) {
-    if (event) event.stopPropagation();
-    
-    let fileInput = document.getElementById('livePhotoFileInput');
-    if (!fileInput) {
-      fileInput = document.createElement('input');
-      fileInput.id = 'livePhotoFileInput';
-      fileInput.type = 'file';
-      fileInput.accept = 'image/*';
-      fileInput.style.display = 'none';
-      document.body.appendChild(fileInput);
+  /* ─── PERSONALIZE MODAL FUNCTIONS ─── */
+  openPersonalizeModal() {
+    if (window.soundSystem && typeof window.soundSystem.playClick === 'function') {
+      window.soundSystem.playClick();
     }
 
-    fileInput.onchange = (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
+    const modal = document.getElementById('personalizeModal');
+    if (!modal) return;
 
-      const reader = new FileReader();
-      reader.onload = (re) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const maxDim = 650;
-          let w = img.width;
-          let h = img.height;
-          if (w > maxDim || h > maxDim) {
-            if (w > h) {
-              h = Math.round((h * maxDim) / w);
-              w = maxDim;
-            } else {
-              w = Math.round((w * maxDim) / h);
-              h = maxDim;
-            }
+    // Prefill current values
+    const sisterInput = document.getElementById('modalSisterName');
+    const brotherInput = document.getElementById('modalBrotherName');
+    const whatsappInput = document.getElementById('modalWhatsappNumber');
+    const upiInput = document.getElementById('modalUpiId');
+
+    if (sisterInput) sisterInput.value = CONFIG.sisterName || "Gudiya";
+    if (brotherInput) brotherInput.value = CONFIG.brotherName || "Tera Bhai";
+    if (whatsappInput) whatsappInput.value = (CONFIG.whatsapp && CONFIG.whatsapp.number) ? CONFIG.whatsapp.number : "919876543210";
+    if (upiInput) upiInput.value = (CONFIG.shagun && CONFIG.shagun.upiId) ? CONFIG.shagun.upiId : "brother@upi";
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  closePersonalizeModal() {
+    const modal = document.getElementById('personalizeModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  }
+
+  handleModalPhoto(index, event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxDim = 600;
+        let w = img.width;
+        let h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          } else {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
           }
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-          const compressedData = canvas.toDataURL('image/jpeg', 0.72);
+        }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        const compressed = canvas.toDataURL('image/jpeg', 0.72);
 
-          // Update memory data & UI
-          if (CONFIG.memories && CONFIG.memories[index]) {
-            CONFIG.memories[index].image = compressedData;
-          }
-          const imgEl = document.getElementById(`memory-img-${index}`);
-          if (imgEl) imgEl.src = compressedData;
-
-          if (window.festiveEffects) window.festiveEffects.celebrate('medium');
-        };
-        img.src = re.target.result;
+        if (!CONFIG.memories[index]) {
+          CONFIG.memories[index] = { title: `Memory #${index + 1}`, caption: "Special moment", date: "Yaadein" };
+        }
+        CONFIG.memories[index].image = compressed;
+        this.renderMemories();
+        alert(`✅ Photo ${index + 1} uploaded successfully!`);
       };
-      reader.readAsDataURL(file);
+      img.src = e.target.result;
     };
-
-    fileInput.click();
+    reader.readAsDataURL(file);
   }
 
-  /* ─── IN-PLACE LIVE EDIT MODE ─── */
-  initLiveEditor() {
-    const editToggleBtn = document.getElementById('liveEditToggleBtn');
-    const editorToolbar = document.getElementById('liveEditorToolbar');
+  applyModalChanges() {
+    const sisterInput = document.getElementById('modalSisterName');
+    const brotherInput = document.getElementById('modalBrotherName');
+    const whatsappInput = document.getElementById('modalWhatsappNumber');
+    const upiInput = document.getElementById('modalUpiId');
 
-    if (editToggleBtn) {
-      editToggleBtn.addEventListener('click', () => {
-        this.toggleEditMode();
-      });
+    if (sisterInput && sisterInput.value.trim()) {
+      CONFIG.sisterName = sisterInput.value.trim();
     }
-  }
-
-  toggleEditMode() {
-    this.isEditMode = !this.isEditMode;
-    const body = document.body;
-    const editorToolbar = document.getElementById('liveEditorToolbar');
-    const editToggleBtn = document.getElementById('liveEditToggleBtn');
-
-    if (this.isEditMode) {
-      body.classList.add('edit-mode-active');
-      if (editorToolbar) editorToolbar.classList.remove('hidden');
-      if (editToggleBtn) editToggleBtn.classList.add('hidden');
-      this.enableInlineEditing(true);
-    } else {
-      body.classList.remove('edit-mode-active');
-      if (editorToolbar) editorToolbar.classList.add('hidden');
-      if (editToggleBtn) editToggleBtn.classList.remove('hidden');
-      this.enableInlineEditing(false);
-      this.syncLiveChanges();
+    if (brotherInput && brotherInput.value.trim()) {
+      CONFIG.brotherName = brotherInput.value.trim();
     }
-  }
-
-  enableInlineEditing(enable) {
-    const editableElements = document.querySelectorAll('.conf-sister-name, .conf-brother-name, #heroTagline, #heroSubtext, .editable-field, #shagunGiftNote, #shagunUpiText');
-    editableElements.forEach(el => {
-      el.contentEditable = enable ? "true" : "false";
-      if (enable) {
-        el.onblur = () => this.syncLiveChanges();
-      }
-    });
-  }
-
-  syncLiveChanges() {
-    // Read edited sister and brother names
-    const sisterEl = document.querySelector('.conf-sister-name');
-    if (sisterEl) {
-      const name = sisterEl.innerText.trim();
-      if (name) {
-        CONFIG.sisterName = name;
-        document.querySelectorAll('.conf-sister-name').forEach(el => el.innerText = name);
-      }
+    if (whatsappInput && whatsappInput.value.trim()) {
+      if (!CONFIG.whatsapp) CONFIG.whatsapp = {};
+      CONFIG.whatsapp.number = whatsappInput.value.trim();
+    }
+    if (upiInput && upiInput.value.trim()) {
+      if (!CONFIG.shagun) CONFIG.shagun = {};
+      CONFIG.shagun.upiId = upiInput.value.trim();
     }
 
-    const brotherEl = document.querySelector('.conf-brother-name');
-    if (brotherEl) {
-      const name = brotherEl.innerText.trim();
-      if (name) {
-        CONFIG.brotherName = name;
-        document.querySelectorAll('.conf-brother-name').forEach(el => el.innerText = name);
-      }
+    this.bindConfigData();
+    this.renderLetter();
+    this.renderMemories();
+    if (window.couponManager) window.couponManager.renderCoupons();
+
+    this.closePersonalizeModal();
+
+    if (window.soundSystem && typeof window.soundSystem.playBackgroundMusic === 'function') {
+      window.soundSystem.playBackgroundMusic();
+    }
+    if (window.festiveEffects && typeof window.festiveEffects.celebrate === 'function') {
+      window.festiveEffects.celebrate('high');
     }
 
-    const taglineEl = document.getElementById('heroTagline');
-    if (taglineEl && CONFIG.hero) CONFIG.hero.tagline = taglineEl.innerText.trim();
-
-    const subtextEl = document.getElementById('heroSubtext');
-    if (subtextEl && CONFIG.hero) CONFIG.hero.subtext = subtextEl.innerText.trim();
-
-    // Sync letter paragraphs
-    document.querySelectorAll('[data-letter-idx]').forEach(el => {
-      const idx = parseInt(el.dataset.letterIdx);
-      if (CONFIG.letter && CONFIG.letter.paragraphs && CONFIG.letter.paragraphs[idx] !== undefined) {
-        CONFIG.letter.paragraphs[idx] = el.innerText.trim();
-      }
-    });
-
-    // Sync promises
-    document.querySelectorAll('[data-promise-idx]').forEach(el => {
-      const idx = parseInt(el.dataset.promiseIdx);
-      if (CONFIG.letter && CONFIG.letter.promises && CONFIG.letter.promises[idx] !== undefined) {
-        CONFIG.letter.promises[idx] = el.innerText.trim();
-      }
-    });
-
-    // Sync memory captions & titles
-    document.querySelectorAll('[data-mem-title-idx]').forEach(el => {
-      const idx = parseInt(el.dataset.memTitleIdx);
-      if (CONFIG.memories && CONFIG.memories[idx]) {
-        CONFIG.memories[idx].title = el.innerText.trim();
-      }
-    });
-
-    document.querySelectorAll('[data-mem-caption-idx]').forEach(el => {
-      const idx = parseInt(el.dataset.memCaptionIdx);
-      if (CONFIG.memories && CONFIG.memories[idx]) {
-        CONFIG.memories[idx].caption = el.innerText.trim();
-      }
-    });
-
-    // Sync Shagun
-    const upiText = document.getElementById('shagunUpiText');
-    if (upiText && CONFIG.shagun) CONFIG.shagun.upiId = upiText.innerText.trim();
+    alert(`🎉 Website customized for ${CONFIG.sisterName}! Scroll down to view your surprise!`);
   }
 
-  /* ─── INSTANT LINK & CONFIG DOWNLOAD ─── */
-  generateAndCopyShareUrl() {
-    this.syncLiveChanges();
-    const compactData = {
-      sisterName: CONFIG.sisterName,
-      sisterNickname: CONFIG.sisterNickname,
-      brotherName: CONFIG.brotherName,
-      festivalYear: CONFIG.festivalYear,
-      hero: CONFIG.hero,
-      letter: CONFIG.letter,
-      memories: CONFIG.memories,
-      whatsapp: CONFIG.whatsapp,
-      shagun: CONFIG.shagun
-    };
-
-    const jsonStr = JSON.stringify(compactData);
-    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
-    const baseUrl = window.location.origin + window.location.pathname;
-    const shareUrl = `${baseUrl}?c=${encoded}`;
-
-    navigator.clipboard.writeText(shareUrl).then(() => {
-      if (window.festiveEffects) window.festiveEffects.celebrate('high');
-      alert(`🎉 Personalized Gift Link Copied!\n\nSend this link to ${CONFIG.sisterName} on WhatsApp/Instagram!`);
-    }).catch(e => {
-      prompt("Copy your personalized link:", shareUrl);
-    });
+  shareOnWhatsAppFromModal() {
+    this.applyModalChanges();
+    this.shareOnWhatsApp();
   }
 
   shareOnWhatsApp() {
-    this.syncLiveChanges();
     const compactData = {
       sisterName: CONFIG.sisterName,
       sisterNickname: CONFIG.sisterNickname,
@@ -454,27 +368,6 @@ class RakhiApp {
 
     const text = encodeURIComponent(`Happy Raksha Bandhan ${CONFIG.sisterName}! 🌸\nMaine tere liye ek special digital surprise banaya hai, open karke dekh! ❤️\n\n${shareUrl}`);
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
-  }
-
-  downloadConfigFile() {
-    this.syncLiveChanges();
-    const code = `/**
- * ===================================================================
- * 🌸 PYARI BEHENA - MASTER CONFIGURATION FILE (config.js) 🌸
- * ===================================================================
- */
-
-const CONFIG = ${JSON.stringify(CONFIG, null, 2)};
-
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = CONFIG;
-}
-`;
-    const blob = new Blob([code], { type: 'text/javascript' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'config.js';
-    link.click();
   }
 
   openPhotoModal(mem) {
