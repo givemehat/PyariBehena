@@ -1,11 +1,12 @@
 /**
  * ===================================================================
- * 🌸 PYARI BEHENA - MAIN APP & DYNAMIC DATA BINDING
+ * 🌸 PYARI BEHENA - MAIN APP, LIVE IN-PLACE EDITOR & DATA BINDING
  * ===================================================================
  */
 
 class RakhiApp {
   constructor() {
+    this.isEditMode = false;
     this.loadUrlConfig();
     this.init();
   }
@@ -16,7 +17,6 @@ class RakhiApp {
       const encodedData = urlParams.get('c') || (window.location.hash ? window.location.hash.substring(1) : null);
       
       if (encodedData) {
-        // Base64 & URI decode
         const jsonStr = decodeURIComponent(escape(atob(encodedData)));
         const urlConfig = JSON.parse(jsonStr);
         if (typeof CONFIG !== 'undefined') {
@@ -32,7 +32,7 @@ class RakhiApp {
 
   init() {
     if (typeof CONFIG === 'undefined') {
-      console.error("CONFIG object is missing! Please make sure config.js is loaded.");
+      console.error("CONFIG object missing!");
       return;
     }
 
@@ -41,6 +41,7 @@ class RakhiApp {
     this.initAudioPlayer();
     this.renderLetter();
     this.renderMemories();
+    this.initLiveEditor();
     this.bindGlobalEvents();
   }
 
@@ -90,7 +91,7 @@ class RakhiApp {
 
       const heroHeading = document.getElementById('heroHeading');
       if (heroHeading && CONFIG.hero.mainHeading) {
-        heroHeading.innerHTML = CONFIG.hero.mainHeading.replace(/\{SISTER_NAME\}/g, `<span class="gold-gradient-text">${sisterName}</span>`);
+        heroHeading.innerHTML = CONFIG.hero.mainHeading.replace(/\{SISTER_NAME\}/g, `<span class="gold-gradient-text conf-sister-name">${sisterName}</span>`);
       }
 
       const heroTagline = document.getElementById('heroTagline');
@@ -149,7 +150,6 @@ class RakhiApp {
         });
       }
 
-      // Resume audio on first interaction
       const handleFirstInteraction = () => {
         if (window.soundSystem) {
           window.soundSystem.resumeContext();
@@ -182,14 +182,14 @@ class RakhiApp {
     if (signature && CONFIG.letter.signature) signature.innerText = CONFIG.letter.signature;
 
     if (letterBody && Array.isArray(CONFIG.letter.paragraphs)) {
-      letterBody.innerHTML = CONFIG.letter.paragraphs.map(p => `
-        <p class="text-zinc-700 leading-relaxed text-sm sm:text-base font-normal">${p}</p>
+      letterBody.innerHTML = CONFIG.letter.paragraphs.map((p, idx) => `
+        <p data-letter-idx="${idx}" class="editable-field text-zinc-700 leading-relaxed text-sm sm:text-base font-normal">${p}</p>
       `).join('');
     }
 
     if (promisesList && Array.isArray(CONFIG.letter.promises)) {
-      promisesList.innerHTML = CONFIG.letter.promises.map(item => `
-        <li class="flex items-center gap-2 text-xs sm:text-sm text-rose-800 font-medium bg-rose-50/90 p-2.5 rounded-xl border border-rose-200/60 shadow-sm">
+      promisesList.innerHTML = CONFIG.letter.promises.map((item, idx) => `
+        <li data-promise-idx="${idx}" class="editable-field flex items-center gap-2 text-xs sm:text-sm text-rose-800 font-medium bg-rose-50/90 p-2.5 rounded-xl border border-rose-200/60 shadow-sm">
           <span>${item}</span>
         </li>
       `).join('');
@@ -213,18 +213,26 @@ class RakhiApp {
 
       card.innerHTML = `
         <div class="relative overflow-hidden rounded-md bg-amber-50 aspect-[4/3]">
-          <img src="${imgSrc}" alt="${title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80'">
+          <img id="memory-img-${index}" src="${imgSrc}" alt="${title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80'">
+          
+          <!-- In-Place Photo Change Button (Shown on Edit Mode or Hover) -->
+          <div class="photo-upload-overlay absolute inset-0 bg-black/50 opacity-0 flex flex-col items-center justify-center text-white transition-opacity gap-1 cursor-pointer" onclick="window.rakhiApp.triggerPhotoUpload(${index}, event)">
+            <span class="text-xl">📷</span>
+            <span class="text-[11px] font-bold bg-white/20 px-2 py-0.5 rounded-full backdrop-blur-sm">Click to Change Photo</span>
+          </div>
+
           <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
-            ${date}
+            <span data-mem-date-idx="${index}" class="editable-field">${date}</span>
           </div>
         </div>
         <div class="mt-3 text-center">
-          <h4 class="font-heading font-bold text-zinc-800 text-sm sm:text-base mt-1">${title}</h4>
-          <p class="font-handwriting text-zinc-600 text-sm sm:text-base mt-0.5 leading-snug">${caption}</p>
+          <h4 data-mem-title-idx="${index}" class="editable-field font-heading font-bold text-zinc-800 text-sm sm:text-base mt-1">${title}</h4>
+          <p data-mem-caption-idx="${index}" class="editable-field font-handwriting text-zinc-600 text-sm sm:text-base mt-0.5 leading-snug">${caption}</p>
         </div>
       `;
 
-      card.addEventListener('click', () => {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('.photo-upload-overlay') || this.isEditMode) return;
         if (window.soundSystem && typeof window.soundSystem.playClick === 'function') {
           window.soundSystem.playClick();
         }
@@ -233,6 +241,240 @@ class RakhiApp {
 
       grid.appendChild(card);
     });
+  }
+
+  /* ─── IN-PLACE PHOTO UPLOADER & COMPRESSION ─── */
+  triggerPhotoUpload(index, event) {
+    if (event) event.stopPropagation();
+    
+    let fileInput = document.getElementById('livePhotoFileInput');
+    if (!fileInput) {
+      fileInput = document.createElement('input');
+      fileInput.id = 'livePhotoFileInput';
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.style.display = 'none';
+      document.body.appendChild(fileInput);
+    }
+
+    fileInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (re) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxDim = 650;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressedData = canvas.toDataURL('image/jpeg', 0.72);
+
+          // Update memory data & UI
+          if (CONFIG.memories && CONFIG.memories[index]) {
+            CONFIG.memories[index].image = compressedData;
+          }
+          const imgEl = document.getElementById(`memory-img-${index}`);
+          if (imgEl) imgEl.src = compressedData;
+
+          if (window.festiveEffects) window.festiveEffects.celebrate('medium');
+        };
+        img.src = re.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    fileInput.click();
+  }
+
+  /* ─── IN-PLACE LIVE EDIT MODE ─── */
+  initLiveEditor() {
+    const editToggleBtn = document.getElementById('liveEditToggleBtn');
+    const editorToolbar = document.getElementById('liveEditorToolbar');
+
+    if (editToggleBtn) {
+      editToggleBtn.addEventListener('click', () => {
+        this.toggleEditMode();
+      });
+    }
+  }
+
+  toggleEditMode() {
+    this.isEditMode = !this.isEditMode;
+    const body = document.body;
+    const editorToolbar = document.getElementById('liveEditorToolbar');
+    const editToggleBtn = document.getElementById('liveEditToggleBtn');
+
+    if (this.isEditMode) {
+      body.classList.add('edit-mode-active');
+      if (editorToolbar) editorToolbar.classList.remove('hidden');
+      if (editToggleBtn) editToggleBtn.classList.add('hidden');
+      this.enableInlineEditing(true);
+    } else {
+      body.classList.remove('edit-mode-active');
+      if (editorToolbar) editorToolbar.classList.add('hidden');
+      if (editToggleBtn) editToggleBtn.classList.remove('hidden');
+      this.enableInlineEditing(false);
+      this.syncLiveChanges();
+    }
+  }
+
+  enableInlineEditing(enable) {
+    const editableElements = document.querySelectorAll('.conf-sister-name, .conf-brother-name, #heroTagline, #heroSubtext, .editable-field, #shagunGiftNote, #shagunUpiText');
+    editableElements.forEach(el => {
+      el.contentEditable = enable ? "true" : "false";
+      if (enable) {
+        el.onblur = () => this.syncLiveChanges();
+      }
+    });
+  }
+
+  syncLiveChanges() {
+    // Read edited sister and brother names
+    const sisterEl = document.querySelector('.conf-sister-name');
+    if (sisterEl) {
+      const name = sisterEl.innerText.trim();
+      if (name) {
+        CONFIG.sisterName = name;
+        document.querySelectorAll('.conf-sister-name').forEach(el => el.innerText = name);
+      }
+    }
+
+    const brotherEl = document.querySelector('.conf-brother-name');
+    if (brotherEl) {
+      const name = brotherEl.innerText.trim();
+      if (name) {
+        CONFIG.brotherName = name;
+        document.querySelectorAll('.conf-brother-name').forEach(el => el.innerText = name);
+      }
+    }
+
+    const taglineEl = document.getElementById('heroTagline');
+    if (taglineEl && CONFIG.hero) CONFIG.hero.tagline = taglineEl.innerText.trim();
+
+    const subtextEl = document.getElementById('heroSubtext');
+    if (subtextEl && CONFIG.hero) CONFIG.hero.subtext = subtextEl.innerText.trim();
+
+    // Sync letter paragraphs
+    document.querySelectorAll('[data-letter-idx]').forEach(el => {
+      const idx = parseInt(el.dataset.letterIdx);
+      if (CONFIG.letter && CONFIG.letter.paragraphs && CONFIG.letter.paragraphs[idx] !== undefined) {
+        CONFIG.letter.paragraphs[idx] = el.innerText.trim();
+      }
+    });
+
+    // Sync promises
+    document.querySelectorAll('[data-promise-idx]').forEach(el => {
+      const idx = parseInt(el.dataset.promiseIdx);
+      if (CONFIG.letter && CONFIG.letter.promises && CONFIG.letter.promises[idx] !== undefined) {
+        CONFIG.letter.promises[idx] = el.innerText.trim();
+      }
+    });
+
+    // Sync memory captions & titles
+    document.querySelectorAll('[data-mem-title-idx]').forEach(el => {
+      const idx = parseInt(el.dataset.memTitleIdx);
+      if (CONFIG.memories && CONFIG.memories[idx]) {
+        CONFIG.memories[idx].title = el.innerText.trim();
+      }
+    });
+
+    document.querySelectorAll('[data-mem-caption-idx]').forEach(el => {
+      const idx = parseInt(el.dataset.memCaptionIdx);
+      if (CONFIG.memories && CONFIG.memories[idx]) {
+        CONFIG.memories[idx].caption = el.innerText.trim();
+      }
+    });
+
+    // Sync Shagun
+    const upiText = document.getElementById('shagunUpiText');
+    if (upiText && CONFIG.shagun) CONFIG.shagun.upiId = upiText.innerText.trim();
+  }
+
+  /* ─── INSTANT LINK & CONFIG DOWNLOAD ─── */
+  generateAndCopyShareUrl() {
+    this.syncLiveChanges();
+    const compactData = {
+      sisterName: CONFIG.sisterName,
+      sisterNickname: CONFIG.sisterNickname,
+      brotherName: CONFIG.brotherName,
+      festivalYear: CONFIG.festivalYear,
+      hero: CONFIG.hero,
+      letter: CONFIG.letter,
+      memories: CONFIG.memories,
+      whatsapp: CONFIG.whatsapp,
+      shagun: CONFIG.shagun
+    };
+
+    const jsonStr = JSON.stringify(compactData);
+    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+    const baseUrl = window.location.origin + window.location.pathname;
+    const shareUrl = `${baseUrl}?c=${encoded}`;
+
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      if (window.festiveEffects) window.festiveEffects.celebrate('high');
+      alert(`🎉 Personalized Gift Link Copied!\n\nSend this link to ${CONFIG.sisterName} on WhatsApp/Instagram!`);
+    }).catch(e => {
+      prompt("Copy your personalized link:", shareUrl);
+    });
+  }
+
+  shareOnWhatsApp() {
+    this.syncLiveChanges();
+    const compactData = {
+      sisterName: CONFIG.sisterName,
+      sisterNickname: CONFIG.sisterNickname,
+      brotherName: CONFIG.brotherName,
+      festivalYear: CONFIG.festivalYear,
+      hero: CONFIG.hero,
+      letter: CONFIG.letter,
+      memories: CONFIG.memories,
+      whatsapp: CONFIG.whatsapp,
+      shagun: CONFIG.shagun
+    };
+
+    const jsonStr = JSON.stringify(compactData);
+    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+    const baseUrl = window.location.origin + window.location.pathname;
+    const shareUrl = `${baseUrl}?c=${encoded}`;
+
+    const text = encodeURIComponent(`Happy Raksha Bandhan ${CONFIG.sisterName}! 🌸\nMaine tere liye ek special digital surprise banaya hai, open karke dekh! ❤️\n\n${shareUrl}`);
+    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+  }
+
+  downloadConfigFile() {
+    this.syncLiveChanges();
+    const code = `/**
+ * ===================================================================
+ * 🌸 PYARI BEHENA - MASTER CONFIGURATION FILE (config.js) 🌸
+ * ===================================================================
+ */
+
+const CONFIG = ${JSON.stringify(CONFIG, null, 2)};
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = CONFIG;
+}
+`;
+    const blob = new Blob([code], { type: 'text/javascript' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'config.js';
+    link.click();
   }
 
   openPhotoModal(mem) {
@@ -273,23 +515,6 @@ class RakhiApp {
     });
   }
 
-  shareWebsite() {
-    const sisterName = CONFIG.sisterName || "Gudiya";
-    const shareData = {
-      title: `Happy Raksha Bandhan, ${sisterName}! 🌸`,
-      text: `A special Raksha Bandhan surprise website with love, memories & treat vouchers! ❤️`,
-      url: window.location.href
-    };
-
-    if (navigator.share) {
-      navigator.share(shareData).catch(err => console.log("Share skipped:", err));
-    } else {
-      navigator.clipboard.writeText(window.location.href).then(() => {
-        alert("🔗 Website link copied to clipboard! Send it to your sister on WhatsApp!");
-      });
-    }
-  }
-
   bindGlobalEvents() {
     const closeLightboxBtn = document.getElementById('closeLightboxBtn');
     if (closeLightboxBtn) {
@@ -303,7 +528,6 @@ class RakhiApp {
       });
     }
 
-    // Wax seal smooth scroll & sparkle
     const waxSeal = document.querySelector('.wax-seal');
     if (waxSeal) {
       waxSeal.addEventListener('click', () => {
