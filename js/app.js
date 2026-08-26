@@ -1,6 +1,6 @@
 /**
  * ===================================================================
- * 🌸 PYARI BEHENA - MAIN APP, LARGE REORDERABLE MEMORIES & SHAGUN
+ * 🌸 PYARI BEHENA - MAIN APP, LARGE MEMORIES, LETTER EDITING & SHAGUN
  * ===================================================================
  */
 
@@ -512,7 +512,7 @@ class RakhiApp {
     window.open(url, '_blank');
   }
 
-  /* ─── PERSONALIZE MODAL ─── */
+  /* ─── PERSONALIZE MODAL WITH LETTER CONTROLS ─── */
   openPersonalizeModal() {
     if (window.soundSystem && typeof window.soundSystem.playClick === 'function') {
       window.soundSystem.playClick();
@@ -525,11 +525,20 @@ class RakhiApp {
     const brotherInput = document.getElementById('modalBrotherName');
     const whatsappInput = document.getElementById('modalWhatsappNumber');
     const brotherUpiInput = document.getElementById('modalBrotherUpi');
+    const letterParagraphsInput = document.getElementById('modalLetterParagraphs');
+    const letterPromisesInput = document.getElementById('modalLetterPromises');
 
     if (sisterInput) sisterInput.value = CONFIG.sisterName || "Gudiya";
     if (brotherInput) brotherInput.value = CONFIG.brotherName || "Tera Bhai";
     if (whatsappInput) whatsappInput.value = (CONFIG.whatsapp && CONFIG.whatsapp.number) ? CONFIG.whatsapp.number : "919876543210";
     if (brotherUpiInput) brotherUpiInput.value = (CONFIG.shagun && CONFIG.shagun.brotherUpiId) ? CONFIG.shagun.brotherUpiId : "brother@upi";
+
+    if (letterParagraphsInput && CONFIG.letter && Array.isArray(CONFIG.letter.paragraphs)) {
+      letterParagraphsInput.value = CONFIG.letter.paragraphs.join('\n\n');
+    }
+    if (letterPromisesInput && CONFIG.letter && Array.isArray(CONFIG.letter.promises)) {
+      letterPromisesInput.value = CONFIG.letter.promises.join('\n');
+    }
 
     modal.classList.remove('hidden');
     modal.classList.add('flex');
@@ -548,6 +557,8 @@ class RakhiApp {
     const brotherInput = document.getElementById('modalBrotherName');
     const whatsappInput = document.getElementById('modalWhatsappNumber');
     const brotherUpiInput = document.getElementById('modalBrotherUpi');
+    const letterParagraphsInput = document.getElementById('modalLetterParagraphs');
+    const letterPromisesInput = document.getElementById('modalLetterPromises');
 
     if (sisterInput && sisterInput.value.trim()) {
       CONFIG.sisterName = sisterInput.value.trim();
@@ -564,6 +575,16 @@ class RakhiApp {
     if (brotherUpiInput && brotherUpiInput.value.trim()) {
       if (!CONFIG.shagun) CONFIG.shagun = {};
       CONFIG.shagun.brotherUpiId = brotherUpiInput.value.trim();
+    }
+
+    // Save customized letter & promises
+    if (letterParagraphsInput && letterParagraphsInput.value.trim()) {
+      if (!CONFIG.letter) CONFIG.letter = {};
+      CONFIG.letter.paragraphs = letterParagraphsInput.value.split('\n\n').map(p => p.trim()).filter(Boolean);
+    }
+    if (letterPromisesInput && letterPromisesInput.value.trim()) {
+      if (!CONFIG.letter) CONFIG.letter = {};
+      CONFIG.letter.promises = letterPromisesInput.value.split('\n').map(p => p.trim()).filter(Boolean);
     }
 
     this.bindConfigData();
