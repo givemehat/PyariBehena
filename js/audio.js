@@ -147,21 +147,44 @@ class SoundSystem {
     this.bgAudio.volume = 0.45;
   }
 
-  toggleBackgroundMusic() {
+  playBackgroundMusic() {
     if (!this.bgAudio) return false;
     this.resumeContext();
+    this.bgAudio.play().then(() => {
+      this.isPlaying = true;
+      this.updateAudioButtonUI(true);
+    }).catch(err => {
+      console.log("Audio waiting for user gesture:", err);
+    });
+    return true;
+  }
 
-    if (this.isPlaying) {
-      this.bgAudio.pause();
-      this.isPlaying = false;
+  pauseBackgroundMusic() {
+    if (!this.bgAudio) return false;
+    this.bgAudio.pause();
+    this.isPlaying = false;
+    this.updateAudioButtonUI(false);
+    return false;
+  }
+
+  updateAudioButtonUI(playing) {
+    const audioToggleBtn = document.getElementById('floatingAudioToggle');
+    const audioIcon = document.getElementById('audioStatusIcon');
+    if (playing) {
+      if (audioIcon) audioIcon.innerHTML = `<span class="animate-pulse text-rose-600">🎵</span>`;
+      if (audioToggleBtn) audioToggleBtn.classList.add('border-rose-400', 'bg-rose-50');
     } else {
-      this.bgAudio.play().then(() => {
-        this.isPlaying = true;
-      }).catch(err => {
-        console.log("Autoplay prevented or waiting for interaction:", err);
-      });
+      if (audioIcon) audioIcon.innerHTML = `<span>🔇</span>`;
+      if (audioToggleBtn) audioToggleBtn.classList.remove('border-rose-400', 'bg-rose-50');
     }
-    return this.isPlaying;
+  }
+
+  toggleBackgroundMusic() {
+    if (this.isPlaying) {
+      return this.pauseBackgroundMusic();
+    } else {
+      return this.playBackgroundMusic();
+    }
   }
 }
 

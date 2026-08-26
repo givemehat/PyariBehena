@@ -31,13 +31,13 @@ const CONFIG = {
   },
 
   // ─── 3. BACKGROUND MUSIC (Sangeet) ──────────────────────────────
-  // Sound system built-in synth sounds use karta hai, but aap apna favorite audio file/link bhi laga sakte hain.
+  // Sound system automatically plays your custom sibling song!
   audio: {
     enabled: true,
     autoPlayPrompt: true,              // Ask to play on first click
-    songTitle: "Nostalgic Sibling Theme (Instrumental)",
-    // Aap koi bhi MP3 link yahan daal sakte hain (ya assets/audio/ folder me save karke uska path de sakte hain):
-    customAudioUrl: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"
+    songTitle: "Phoolon Ka Taaron Ka (Lata Mangeshkar)",
+    // Local project audio path:
+    customAudioUrl: "assets/audio/phoolon-ka-taaron-ka.mp3"
   },
 
   // ─── 4. VIRTUAL RAKHI CEREMONY (Interactive Puja Thali) ─────────
