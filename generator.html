@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pyari Behena - No-Code Config Generator 🌸</title>
+  <title>Pyari Behena - No-Code Gift & Link Generator 🌸</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Rozha+One&display=swap" rel="stylesheet">
   <style>
@@ -11,31 +11,72 @@
     .font-decorative { font-family: 'Rozha One', serif; }
   </style>
 </head>
-<body class="bg-amber-50/40 min-h-screen text-zinc-800 pb-16">
+<body class="bg-amber-50/50 min-h-screen text-zinc-800 pb-20">
 
   <!-- Header -->
-  <header class="bg-rose-900 text-white py-6 px-4 shadow-lg">
+  <header class="bg-gradient-to-r from-rose-900 via-rose-800 to-amber-900 text-white py-6 px-4 shadow-lg sticky top-0 z-30 backdrop-blur-md">
     <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
       <div>
         <div class="flex items-center gap-2">
           <span class="text-2xl">🌸</span>
-          <h1 class="font-decorative text-xl sm:text-2xl tracking-wide">Pyari Behena - Config Generator</h1>
+          <h1 class="font-decorative text-xl sm:text-2xl tracking-wide">Pyari Behena - Gift Generator</h1>
         </div>
-        <p class="text-rose-200 text-xs sm:text-sm mt-1">
-          Form fill karein aur 1-click me apna personalized <code>config.js</code> download karein! ✨
+        <p class="text-rose-200 text-xs sm:text-sm mt-0.5">
+          Fill the form & create an instant shareable WhatsApp link or download <code>config.js</code>! ✨
         </p>
       </div>
-      <a href="index.html" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs rounded-xl shadow transition">
-        👁️ Preview Website
-      </a>
+      <div class="flex items-center gap-2">
+        <a href="index.html" target="_blank" class="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs rounded-xl shadow transition flex items-center gap-1.5">
+          <span>👁️</span> Live Preview
+        </a>
+      </div>
     </div>
   </header>
 
-  <!-- Main Form Container -->
-  <main class="max-w-4xl mx-auto mt-8 px-4">
-    <form id="configForm" onsubmit="event.preventDefault(); generateConfig();" class="space-y-6">
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto mt-8 px-4 space-y-6">
+
+    <!-- Instant Share Banner -->
+    <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white rounded-2xl p-5 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="space-y-1 text-center sm:text-left">
+        <span class="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full">
+          🚀 Instant Zero-Hosting Link
+        </span>
+        <h2 class="text-base sm:text-lg font-bold">Bina kisi coding ya deployment ke turant link bhejein!</h2>
+        <p class="text-xs text-emerald-100">
+          Form fill karein aur "Generate Instant Link" dabayein — direct WhatsApp par behen ko share karein!
+        </p>
+      </div>
+      <button type="button" onclick="generateInstantUrl()" class="px-5 py-3 bg-white text-emerald-800 hover:bg-emerald-50 font-bold text-xs sm:text-sm rounded-xl shadow-lg transition whitespace-nowrap flex items-center gap-2 transform active:scale-95">
+        <span>🔗</span> Generate Instant Link
+      </button>
+    </div>
+
+    <!-- Generated Shareable Link Output (Hidden by default) -->
+    <div id="shareLinkContainer" class="hidden bg-white border-2 border-emerald-400 rounded-2xl p-5 shadow-lg space-y-3 animate-fadeIn">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-emerald-800 flex items-center gap-1">
+          <span>🎉</span> Your Instant Gift Link is Ready:
+        </span>
+        <span class="text-[10px] text-zinc-400 font-mono">Zero Hosting Required</span>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center gap-2">
+        <input type="text" id="instantUrlInput" readonly class="w-full p-2.5 bg-zinc-50 border rounded-xl text-xs font-mono text-zinc-700 select-all">
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button onclick="copyInstantUrl()" class="w-full sm:w-auto py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow transition whitespace-nowrap">
+            📋 Copy Link
+          </button>
+          <button onclick="shareInstantUrlWhatsApp()" class="w-full sm:w-auto py-2.5 px-4 bg-green-500 hover:bg-green-600 text-white text-xs font-bold rounded-xl shadow transition whitespace-nowrap flex items-center justify-center gap-1">
+            <span>💬</span> WhatsApp
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customization Form -->
+    <form id="configForm" onsubmit="event.preventDefault();" class="space-y-6">
       
-      <!-- 1. Sibling Names -->
+      <!-- 1. Sibling Details -->
       <section class="bg-white rounded-2xl p-6 shadow-sm border border-amber-200">
         <h2 class="text-base font-bold text-rose-900 flex items-center gap-2 border-b pb-2 mb-4">
           <span>👑</span> Sibling & Occasion Details
@@ -57,31 +98,21 @@
             <label class="block text-xs font-semibold text-zinc-600 mb-1">Festival Year / Occasion</label>
             <input type="text" id="festivalYear" value="2026" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
           </div>
-          <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold text-zinc-600 mb-1">Top Badge Text</label>
-            <input type="text" id="relationBadge" value="World's Best Sister Ever 👑" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
-          </div>
         </div>
       </section>
 
-      <!-- 2. WhatsApp Number & Claim Template -->
+      <!-- 2. WhatsApp Number & Voucher Settings -->
       <section class="bg-white rounded-2xl p-6 shadow-sm border border-amber-200">
         <h2 class="text-base font-bold text-rose-900 flex items-center gap-2 border-b pb-2 mb-4">
-          <span>💬</span> WhatsApp Voucher Settings
+          <span>💬</span> WhatsApp Voucher Claim Settings
         </h2>
         <div class="space-y-4">
           <div>
             <label class="block text-xs font-semibold text-zinc-600 mb-1">
-              Brother's WhatsApp Number (With Country Code, e.g. 919876543210)
+              Brother's WhatsApp Number (Country code ke saath, e.g. 919876543210)
             </label>
             <input type="text" id="whatsappNumber" value="919876543210" placeholder="919876543210" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
-            <p class="text-[11px] text-zinc-400 mt-1">Leave empty if you don't want to specify a fixed number.</p>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-zinc-600 mb-1">
-              WhatsApp Message Template (Use {BROTHER_NAME}, {VOUCHER_TITLE}, {VOUCHER_CODE})
-            </label>
-            <textarea id="whatsappTemplate" rows="3" class="w-full p-2.5 rounded-xl border border-zinc-300 text-xs sm:text-sm focus:border-rose-500 focus:outline-none">Hey {BROTHER_NAME}! 🌸&#10;Maine Raksha Bandhan special website par ye voucher claim kiya hai:&#10;&#10;🎟️ *{VOUCHER_TITLE}*&#10;🔑 Code: *{VOUCHER_CODE}*&#10;&#10;Ab jaldi se mera treat/pass redeem karo! 😋❤️</textarea>
+            <p class="text-[11px] text-zinc-400 mt-1">Behen voucher claim button par tap karegi toh direct is number par message aayega.</p>
           </div>
         </div>
       </section>
@@ -98,9 +129,9 @@
           </div>
           <div>
             <label class="block text-xs font-semibold text-zinc-600 mb-1">
-              Letter Paragraphs (Separate each paragraph with a blank line)
+              Letter Paragraphs (Paragraphs ke beech 1 blank line chhodhein)
             </label>
-            <textarea id="letterParagraphs" rows="6" class="w-full p-2.5 rounded-xl border border-zinc-300 text-xs sm:text-sm focus:border-rose-500 focus:outline-none">Meri pyari behen,
+            <textarea id="letterParagraphs" rows="5" class="w-full p-2.5 rounded-xl border border-zinc-300 text-xs sm:text-sm focus:border-rose-500 focus:outline-none">Meri pyari behen,
 
 Mujhe aaj bhi yaad hai wo din jab hum TV ke remote ke liye lada karte the, bina wajah ek dusre ko chidhate the, aur jab bhi mummy gussa hoti thi toh hum dono ek dusre ko bachate the.
 
@@ -123,11 +154,11 @@ Is Raksha Bandhan par main tujhse wada karta hu ki chahe jo ho jaye, main hamesh
         </div>
       </section>
 
-      <!-- 4. Photos / Memories -->
+      <!-- 4. Photos Scrapbook with Local Image Upload & Compression -->
       <section class="bg-white rounded-2xl p-6 shadow-sm border border-amber-200">
         <div class="flex items-center justify-between border-b pb-2 mb-4">
           <h2 class="text-base font-bold text-rose-900 flex items-center gap-2">
-            <span>📸</span> Memories & Photo Scrapbook
+            <span>📸</span> Memories (Photos Scrapbook)
           </h2>
           <button type="button" onclick="addMemoryRow()" class="text-xs px-3 py-1 bg-rose-50 text-rose-700 font-semibold rounded-lg border border-rose-200 hover:bg-rose-100">
             + Add Photo
@@ -147,8 +178,9 @@ Is Raksha Bandhan par main tujhse wada karta hu ki chahe jo ho jaye, main hamesh
                 <input type="text" class="mem-date w-full p-2 rounded-lg border text-xs" value="Sweet Old Days">
               </div>
               <div>
-                <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Image URL or Local Path</label>
-                <input type="text" class="mem-image w-full p-2 rounded-lg border text-xs" value="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80">
+                <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Upload Photo or Paste URL</label>
+                <input type="file" accept="image/*" onchange="handleImageUpload(event, this)" class="block w-full text-[11px] text-zinc-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100">
+                <input type="text" class="mem-image hidden" value="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80">
               </div>
             </div>
             <div>
@@ -169,8 +201,9 @@ Is Raksha Bandhan par main tujhse wada karta hu ki chahe jo ho jaye, main hamesh
                 <input type="text" class="mem-date w-full p-2 rounded-lg border text-xs" value="Classic Sibling Fights">
               </div>
               <div>
-                <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Image URL or Local Path</label>
-                <input type="text" class="mem-image w-full p-2 rounded-lg border text-xs" value="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80">
+                <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Upload Photo or Paste URL</label>
+                <input type="file" accept="image/*" onchange="handleImageUpload(event, this)" class="block w-full text-[11px] text-zinc-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100">
+                <input type="text" class="mem-image hidden" value="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80">
               </div>
             </div>
             <div>
@@ -188,11 +221,11 @@ Is Raksha Bandhan par main tujhse wada karta hu ki chahe jo ho jaye, main hamesh
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-zinc-600 mb-1">Shopping Voucher / Gift Code</label>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">Shopping Voucher Code</label>
             <input type="text" id="giftCardCode" value="RAKHI-2026-BHAI-TREAT" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
           </div>
           <div>
-            <label class="block text-xs font-semibold text-zinc-600 mb-1">Brother's UPI ID (for Shagun QR)</label>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">Brother's UPI ID</label>
             <input type="text" id="upiId" value="brother@upi" placeholder="yourname@upi" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
           </div>
           <div class="sm:col-span-2">
@@ -202,18 +235,18 @@ Is Raksha Bandhan par main tujhse wada karta hu ki chahe jo ho jaye, main hamesh
         </div>
       </section>
 
-      <!-- Action Buttons -->
+      <!-- Download & Copy Code Buttons -->
       <div class="flex flex-col sm:flex-row items-center gap-4 pt-2">
-        <button type="button" onclick="generateAndDownload()" class="w-full sm:w-1/2 py-3.5 px-6 bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm rounded-xl shadow-lg transition flex items-center justify-center gap-2">
-          <span>⬇️</span> Download config.js
+        <button type="button" onclick="generateAndDownload()" class="w-full sm:w-1/2 py-3.5 px-6 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+          <span>⬇️</span> Download config.js (For GitHub/Hosting)
         </button>
-        <button type="button" onclick="copyConfigToClipboard()" class="w-full sm:w-1/2 py-3.5 px-6 bg-zinc-900 hover:bg-black text-white font-bold text-sm rounded-xl shadow transition flex items-center justify-center gap-2">
+        <button type="button" onclick="copyConfigToClipboard()" class="w-full sm:w-1/2 py-3.5 px-6 bg-zinc-900 hover:bg-black text-white font-bold text-xs sm:text-sm rounded-xl shadow transition flex items-center justify-center gap-2">
           <span>📋</span> Copy Code to Clipboard
         </button>
       </div>
     </form>
 
-    <!-- Generated Code Output Modal / Preview -->
+    <!-- Code Preview Section -->
     <div class="mt-8 bg-zinc-900 text-zinc-100 rounded-2xl p-6 shadow-xl border border-zinc-800">
       <div class="flex items-center justify-between border-b border-zinc-800 pb-3 mb-3">
         <span class="text-xs font-mono text-zinc-400">📄 config.js Preview</span>
@@ -221,7 +254,7 @@ Is Raksha Bandhan par main tujhse wada karta hu ki chahe jo ho jaye, main hamesh
           Copy All
         </button>
       </div>
-      <pre id="codePreview" class="text-xs font-mono overflow-x-auto max-h-96 text-amber-200 leading-relaxed"></pre>
+      <pre id="codePreview" class="text-xs font-mono overflow-x-auto max-h-80 text-amber-200 leading-relaxed"></pre>
     </div>
   </main>
 
@@ -231,10 +264,8 @@ Is Raksha Bandhan par main tujhse wada karta hu ki chahe jo ho jaye, main hamesh
       const sisterNickname = document.getElementById('sisterNickname').value.trim() || "Meri Nautanki Behen";
       const brotherName = document.getElementById('brotherName').value.trim() || "Tera Bhai";
       const festivalYear = document.getElementById('festivalYear').value.trim() || "2026";
-      const relationBadge = document.getElementById('relationBadge').value.trim() || "World's Best Sister Ever 👑";
 
       const whatsappNumber = document.getElementById('whatsappNumber').value.trim() || "919876543210";
-      const whatsappTemplate = document.getElementById('whatsappTemplate').value.trim();
 
       const letterTitle = document.getElementById('letterTitle').value.trim() || "Pyari Behena ke Naam, Bhai Ki Chitthi 💌";
       const letterParagraphs = document.getElementById('letterParagraphs').value.split('\n\n').map(p => p.trim()).filter(Boolean);
@@ -244,7 +275,6 @@ Is Raksha Bandhan par main tujhse wada karta hu ki chahe jo ho jaye, main hamesh
       const upiId = document.getElementById('upiId').value.trim() || "brother@upi";
       const shagunMessage = document.getElementById('shagunMessage').value.trim();
 
-      // Collect memories
       const memoryRows = document.querySelectorAll('.memory-row');
       const memories = [];
       memoryRows.forEach((row, i) => {
@@ -260,7 +290,7 @@ Is Raksha Bandhan par main tujhse wada karta hu ki chahe jo ho jaye, main hamesh
         sisterNickname,
         brotherName,
         festivalYear,
-        relationBadge,
+        relationBadge: "World's Best Sister Ever 👑",
         meta: {
           pageTitle: `Happy Raksha Bandhan, ${sisterName}! 🌸`,
           description: `A special digital Raksha Bandhan surprise from ${brotherName} with lots of love, memories, and treat vouchers!`,
@@ -290,7 +320,7 @@ Is Raksha Bandhan par main tujhse wada karta hu ki chahe jo ho jaye, main hamesh
         memories: memories,
         whatsapp: {
           number: whatsappNumber,
-          messageTemplate: whatsappTemplate
+          messageTemplate: "Hey {BROTHER_NAME}! 🌸\nMaine Raksha Bandhan special website par ye voucher claim kiya hai:\n\n🎟️ *{VOUCHER_TITLE}*\n🔑 Code: *{VOUCHER_CODE}*\n\nAb jaldi se mera treat/pass redeem karo! 😋❤️"
         },
         coupons: [
           {
@@ -342,12 +372,52 @@ Is Raksha Bandhan par main tujhse wada karta hu ki chahe jo ho jaye, main hamesh
       };
     }
 
+    function generateInstantUrl() {
+      const data = getFormData();
+      const compactData = {
+        sisterName: data.sisterName,
+        sisterNickname: data.sisterNickname,
+        brotherName: data.brotherName,
+        festivalYear: data.festivalYear,
+        letter: data.letter,
+        memories: data.memories,
+        whatsapp: data.whatsapp,
+        shagun: data.shagun
+      };
+
+      const jsonStr = JSON.stringify(compactData);
+      const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+      
+      const baseUrl = window.location.origin + window.location.pathname.replace('generator.html', 'index.html');
+      const shareUrl = `${baseUrl}?c=${encoded}`;
+
+      const container = document.getElementById('shareLinkContainer');
+      const input = document.getElementById('instantUrlInput');
+      input.value = shareUrl;
+      container.classList.remove('hidden');
+      container.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function copyInstantUrl() {
+      const input = document.getElementById('instantUrlInput');
+      input.select();
+      navigator.clipboard.writeText(input.value).then(() => {
+        alert("🎉 Instant Gift Link copied to clipboard! Send it to your sister!");
+      });
+    }
+
+    function shareInstantUrlWhatsApp() {
+      const input = document.getElementById('instantUrlInput');
+      const sisterName = document.getElementById('sisterName').value.trim() || "Behena";
+      const text = encodeURIComponent(`Happy Raksha Bandhan ${sisterName}! 🌸\nMaine tumhare liye ek special surprise website banayi hai, open karke dekho! ❤️\n\n${input.value}`);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
+
     function generateCodeString() {
       const data = getFormData();
       return `/**
  * ===================================================================
  * 🌸 PYARI BEHENA - MASTER CONFIGURATION FILE (config.js) 🌸
- * Generated automatically via generator.html
  * ===================================================================
  */
 
@@ -375,8 +445,45 @@ if (typeof module !== "undefined" && module.exports) {
     function copyConfigToClipboard() {
       const code = generateCodeString();
       navigator.clipboard.writeText(code).then(() => {
-        alert("✅ config.js code successfully copied to clipboard! Paste it into your config.js file.");
+        alert("✅ config.js code copied to clipboard! Paste it into your config.js file.");
       });
+    }
+
+    function handleImageUpload(event, inputEl) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 600;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressedData = canvas.toDataURL('image/jpeg', 0.7);
+
+          const row = inputEl.closest('.memory-row');
+          const hiddenInput = row.querySelector('.mem-image');
+          hiddenInput.value = compressedData;
+          updatePreview();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
     function addMemoryRow() {
@@ -394,8 +501,9 @@ if (typeof module !== "undefined" && module.exports) {
             <input type="text" class="mem-date w-full p-2 rounded-lg border text-xs" value="Memories">
           </div>
           <div>
-            <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Image URL or Local Path</label>
-            <input type="text" class="mem-image w-full p-2 rounded-lg border text-xs" value="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80">
+            <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Upload Photo or Paste URL</label>
+            <input type="file" accept="image/*" onchange="handleImageUpload(event, this)" class="block w-full text-[11px] text-zinc-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100">
+            <input type="text" class="mem-image hidden" value="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80">
           </div>
         </div>
         <div>
@@ -407,7 +515,6 @@ if (typeof module !== "undefined" && module.exports) {
       updatePreview();
     }
 
-    // Auto-update preview on form changes
     document.getElementById('configForm').addEventListener('input', updatePreview);
     updatePreview();
   </script>

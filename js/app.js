@@ -6,7 +6,28 @@
 
 class RakhiApp {
   constructor() {
+    this.loadUrlConfig();
     this.init();
+  }
+
+  loadUrlConfig() {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const encodedData = urlParams.get('c') || (window.location.hash ? window.location.hash.substring(1) : null);
+      
+      if (encodedData) {
+        // Base64 & URI decode
+        const jsonStr = decodeURIComponent(escape(atob(encodedData)));
+        const urlConfig = JSON.parse(jsonStr);
+        if (typeof CONFIG !== 'undefined') {
+          window.CONFIG = Object.assign({}, window.CONFIG, urlConfig);
+        } else {
+          window.CONFIG = urlConfig;
+        }
+      }
+    } catch (e) {
+      console.warn("Using default config.js:", e);
+    }
   }
 
   init() {
@@ -52,7 +73,6 @@ class RakhiApp {
   }
 
   bindConfigData() {
-    // Sibling Names & Header Badges
     const sisterName = CONFIG.sisterName || "Gudiya";
     const brotherName = CONFIG.brotherName || "Tera Bhai";
     const festivalYear = CONFIG.festivalYear || "2026";
@@ -129,7 +149,7 @@ class RakhiApp {
         });
       }
 
-      // Resume audio on first user touch anywhere if blocked by browser policy
+      // Resume audio on first interaction
       const handleFirstInteraction = () => {
         if (window.soundSystem) {
           window.soundSystem.resumeContext();
@@ -253,6 +273,23 @@ class RakhiApp {
     });
   }
 
+  shareWebsite() {
+    const sisterName = CONFIG.sisterName || "Gudiya";
+    const shareData = {
+      title: `Happy Raksha Bandhan, ${sisterName}! 🌸`,
+      text: `A special Raksha Bandhan surprise website with love, memories & treat vouchers! ❤️`,
+      url: window.location.href
+    };
+
+    if (navigator.share) {
+      navigator.share(shareData).catch(err => console.log("Share skipped:", err));
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert("🔗 Website link copied to clipboard! Send it to your sister on WhatsApp!");
+      });
+    }
+  }
+
   bindGlobalEvents() {
     const closeLightboxBtn = document.getElementById('closeLightboxBtn');
     if (closeLightboxBtn) {
@@ -266,7 +303,7 @@ class RakhiApp {
       });
     }
 
-    // Wax seal smooth scroll
+    // Wax seal smooth scroll & sparkle
     const waxSeal = document.querySelector('.wax-seal');
     if (waxSeal) {
       waxSeal.addEventListener('click', () => {
