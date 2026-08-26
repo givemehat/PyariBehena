@@ -1,4 +1,4 @@
-# 🌸 Complete Customization & Deployment Guide (Meri Behen Project)
+# 🌸 Complete Customization & Deployment Guide (Pyari Behena Project)
 
 > **YouTube Viewers & Beginners Guide**: Is guide ko padhkar koi bhi apne laptop/PC par is website ko **sirf 2 minute me customize** karke **free me live (deploy)** kar sakta hai!
 
@@ -20,12 +20,12 @@
 ### Method A: Agar aapko Git use karna aata hai
 Terminal ya Command Prompt kholein aur type karein:
 ```bash
-git clone https://github.com/givemehat/MeriBehen.git
-cd MeriBehen
+git clone https://github.com/givemehat/PyariBehena.git
+cd PyariBehena
 ```
 
 ### Method B: Agar aap beginner hain (Direct Download)
-1. GitHub page par jayein.
+1. GitHub page par jayein: **[https://github.com/givemehat/PyariBehena](https://github.com/givemehat/PyariBehena)**
 2. Green color ke **`<> Code`** button par click karein.
 3. **`Download ZIP`** par click karein.
 4. Download hui ZIP file ko right click karke **Extract All** (Unzip) kar lein.
@@ -120,7 +120,7 @@ Aapki customized website ko internet par live karne ka sabse aasan aur bilkul fr
 ### Step 4.1: GitHub par Repository Banayein
 1. [github.com](https://github.com) par login karein.
 2. Top right me **`+`** icon par click karke **New repository** select karein.
-3. Repository name dein: `meri-behen` ya `rakhi-gift`.
+3. Repository name dein: `pyari-behena` ya `rakhi-gift`.
 4. Isse **Public** select karein aur **Create repository** par click karein.
 
 ### Step 4.2: Code Push Karein
@@ -129,7 +129,7 @@ Apne project folder me terminal open karke ye commands run karein:
 git add .
 git commit -m "My Sister Rakhi Gift Website"
 git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/meri-behen.git
+git remote add origin https://github.com/YOUR_USERNAME/pyari-behena.git
 git push -u origin main
 ```
 
@@ -139,7 +139,7 @@ git push -u origin main
 3. **Branch** dropdown me `main` select karein aur folder me `/ (root)` choose karein.
 4. **Save** button par click karein.
 5. 1-2 minute wait karein aur page ko refresh karein. Aapko aapki live website ka link mil jayega:
-   👉 `https://YOUR_USERNAME.github.io/meri-behen/`
+   👉 `https://YOUR_USERNAME.github.io/pyari-behena/`
 
 ---
 
@@ -149,7 +149,7 @@ Agar aapko Git commands nahi chalani, toh aap bina kisi command ke bhi deploy ka
 
 1. [vercel.com](https://vercel.com) ya [netlify.com](https://netlify.com) par free account banayein.
 2. **Add New Project** -> **Deploy without Git** (ya folder ko browser window me Drag & Drop kar dein).
-3. 10 seconds me aapko ek unique live URL mil jayega (jaise `https://meri-behen.vercel.app`)!
+3. 10 seconds me aapko ek unique live URL mil jayega (jaise `https://pyari-behena.vercel.app`)!
 
 ---
 
@@ -158,7 +158,7 @@ Agar aapko Git commands nahi chalani, toh aap bina kisi command ke bhi deploy ka
 Aapka customized gift link ready hai! Aap apni sister ko is tarah message bhej sakte hain:
 
 > *"Happy Raksha Bandhan! 🌸 Chahe main is baar gahr nahi aa paya, par maine tumhare liye ek special surprise website banayi hai. Open karke apna shagun aur vouchers claim karo! ❤️"*  
-> 🔗 **`https://YOUR_USERNAME.github.io/meri-behen/`**
+> 🔗 **`https://YOUR_USERNAME.github.io/pyari-behena/`**
 
 ---
 

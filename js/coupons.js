@@ -1,6 +1,6 @@
 /**
  * ===================================================================
- * 🎟️ MERI BEHEN - SIBLING LOVE VOUCHERS & COUPON SCRATCH
+ * 🎟️ PYARI BEHENA - SIBLING LOVE VOUCHERS & COUPON SCRATCH
  * ===================================================================
  */
 

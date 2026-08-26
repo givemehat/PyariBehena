@@ -1,6 +1,6 @@
 /**
  * ===================================================================
- * 🌸 MERI BEHEN - RAKSHA BANDHAN SURPRISE CONFIGURATION 🌸
+ * 🌸 PYARI BEHENA - RAKSHA BANDHAN SURPRISE CONFIGURATION 🌸
  * ===================================================================
  * 
  * 👉 YOUTUBE VIEWERS & DEVELOPERS:
@@ -246,8 +246,8 @@ const CONFIG = {
   // ─── 10. FOOTER & SOCIAL ─────────────────────────────────────────
   footer: {
     message: "Crafted with immense love by",
-    copyright: "2026 • Meri Behen Project",
-    githubRepoLink: "https://github.com/givemehat/MeriBehen"
+    copyright: "2026 • Pyari Behena Project",
+    githubRepoLink: "https://github.com/givemehat/PyariBehena"
   }
 };
 

@@ -1,7 +1,15 @@
-# 🌸 Meri Behen - Raksha Bandhan Special Gift Website Template 🪔
+# 🌸 Pyari Behena (प्यारी बहना) - Raksha Bandhan Special Gift Website 🪔
 
-> **A heartfelt, interactive, and customizable digital Raksha Bandhan gift website for sisters.**  
-> *Perfect for brothers living away from home (or anyone wanting to surprise their sister with a modern, emotional, and interactive digital gift!)*
+> **A heartfelt, interactive, and customizable digital Raksha Bandhan surprise website for your sister.**  
+> *Specially crafted for brothers living away from home (or anyone wanting to surprise their sister with a modern, emotional, and interactive digital gift!).*
+
+---
+
+## 🌐 Live Demo & Repository
+
+- 🌟 **Live Website (GitHub Pages)**: [https://givemehat.github.io/PyariBehena/](https://givemehat.github.io/PyariBehena/)
+- 📦 **GitHub Repository**: [https://github.com/givemehat/PyariBehena](https://github.com/givemehat/PyariBehena)
+- 📖 **Complete Step-by-Step Guide**: [DEPLOYMENT_AND_CUSTOMIZATION_GUIDE.md](DEPLOYMENT_AND_CUSTOMIZATION_GUIDE.md)
 
 ---
 
@@ -35,8 +43,8 @@ Aapko HTML ya CSS seekhne ki koi zaroorat nahi hai! Saari details ek hi file me 
 
 ### Step 1: Clone or Download the Repository
 ```bash
-git clone https://github.com/givemehat/MeriBehen.git
-cd MeriBehen
+git clone https://github.com/givemehat/PyariBehena.git
+cd PyariBehena
 ```
 
 ### Step 2: Edit `config.js`
@@ -56,18 +64,18 @@ Double click `index.html` to open directly in any browser (Chrome, Safari, Edge,
 ## 🌐 Free 1-Click Deployment (Bina Kisi Kharch Ke Live Karein)
 
 ### Option A: GitHub Pages (Free & Recommended)
-1. Apne GitHub account par nayi repository banayein: `meri-behen`.
+1. Apne GitHub account par nayi repository banayein: `pyari-behena`.
 2. Saari files push karein:
    ```bash
    git add .
    git commit -m "Happy Raksha Bandhan"
    git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/meri-behen.git
+   git remote add origin https://github.com/YOUR_USERNAME/pyari-behena.git
    git push -u origin main
    ```
 3. GitHub Repo me jayein -> **Settings** -> **Pages**.
-4. **Branch** me `main` select karein aur `/ (root)` choose karke **Save** par click karein.
-5. 1 minute me aapki website live ho jayegi: `https://YOUR_USERNAME.github.io/meri-behen/` 🎉
+4. **Branch** me `main` select karein aur folder me `/ (root)` choose karke **Save** par click karein.
+5. 1 minute me aapki website live ho jayegi: `https://YOUR_USERNAME.github.io/pyari-behena/` 🎉
 
 ### Option B: Vercel / Netlify (Drag & Drop)
 1. [vercel.com](https://vercel.com) ya [netlify.com](https://netlify.com) par jayein.
@@ -79,7 +87,7 @@ Double click `index.html` to open directly in any browser (Chrome, Safari, Edge,
 ## 📂 Project Structure
 
 ```
-MeriBehen/
+PyariBehena/
 ├── index.html        # Main festive website
 ├── config.js         # Single master file for all text, photos & gifts
 ├── css/
@@ -91,6 +99,7 @@ MeriBehen/
 │   ├── coupons.js    # Privilege passes & WhatsApp claims
 │   ├── effects.js    # Canvas falling petals & sparkles
 │   └── audio.js      # Web Audio API synthesizer & music player
+├── DEPLOYMENT_AND_CUSTOMIZATION_GUIDE.md # Detailed user guide
 └── README.md         # Tutorial & setup guide
 ```
 
@@ -101,11 +110,12 @@ MeriBehen/
 Aap apne YouTube video ke description me ye text use kar sakte hain:
 
 ```markdown
-🎁 Raksha Bandhan Special Surprise Website for Sisters!
+🎁 Raksha Bandhan Special Surprise Website for Sisters! 🌸
 Is video me maine ek aesthetic, emotional aur interactive Raksha Bandhan gift website banayi hai jise aap 2 minute me clone karke apni sister ke naam se customize kar sakte hain.
 
-🔗 GitHub Repo: https://github.com/givemehat/MeriBehen
-⚡ Live Demo: https://givemehat.github.io/MeriBehen/
+🔗 GitHub Repo: https://github.com/givemehat/PyariBehena
+⚡ Live Demo: https://givemehat.github.io/PyariBehena/
+📖 Setup Guide: https://github.com/givemehat/PyariBehena/blob/main/DEPLOYMENT_AND_CUSTOMIZATION_GUIDE.md
 
 Features:
 - Virtual Rakhi & Aarti Ceremony

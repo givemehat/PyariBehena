@@ -1,6 +1,6 @@
 /**
  * ===================================================================
- * 🎵 MERI BEHEN - SOUND & AUDIO SYSTEM (Web Audio API + Custom MP3)
+ * 🎵 PYARI BEHENA - SOUND & AUDIO SYSTEM (Web Audio API + Custom MP3)
  * ===================================================================
  */
 

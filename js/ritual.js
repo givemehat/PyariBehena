@@ -1,6 +1,6 @@
 /**
  * ===================================================================
- * 🪔 MERI BEHEN - VIRTUAL RAKHI & PUJA THALI RITUAL
+ * 🪔 PYARI BEHENA - VIRTUAL RAKHI & PUJA THALI RITUAL
  * ===================================================================
  */
 

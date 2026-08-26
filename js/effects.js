@@ -1,6 +1,6 @@
 /**
  * ===================================================================
- * 🌸 MERI BEHEN - VISUAL EFFECTS & CANVAS PARTICLES 🌸
+ * 🌸 PYARI BEHENA - VISUAL EFFECTS & CANVAS PARTICLES 🌸
  * ===================================================================
  */
 
