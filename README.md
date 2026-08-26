@@ -35,7 +35,7 @@ Aapko HTML ya CSS seekhne ki koi zaroorat nahi hai! Saari details ek hi file me 
 
 ### Step 1: Clone or Download the Repository
 ```bash
-git clone https://github.com/your-username/MeriBehen.git
+git clone https://github.com/givemehat/MeriBehen.git
 cd MeriBehen
 ```
 
@@ -104,8 +104,8 @@ Aap apne YouTube video ke description me ye text use kar sakte hain:
 🎁 Raksha Bandhan Special Surprise Website for Sisters!
 Is video me maine ek aesthetic, emotional aur interactive Raksha Bandhan gift website banayi hai jise aap 2 minute me clone karke apni sister ke naam se customize kar sakte hain.
 
-🔗 GitHub Repo: https://github.com/your-username/MeriBehen
-⚡ Live Demo: https://your-username.github.io/MeriBehen/
+🔗 GitHub Repo: https://github.com/givemehat/MeriBehen
+⚡ Live Demo: https://givemehat.github.io/MeriBehen/
 
 Features:
 - Virtual Rakhi & Aarti Ceremony

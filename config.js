@@ -247,7 +247,7 @@ const CONFIG = {
   footer: {
     message: "Crafted with immense love by",
     copyright: "2026 • Meri Behen Project",
-    githubRepoLink: "https://github.com/your-username/MeriBehen"
+    githubRepoLink: "https://github.com/givemehat/MeriBehen"
   }
 };
 
