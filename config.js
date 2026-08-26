@@ -3,12 +3,10 @@
  * 🌸 PYARI BEHENA - MASTER CONFIGURATION FILE (config.js) 🌸
  * ===================================================================
  * 
- * 💡 HOW TO PERSONALIZE:
- * 1. You only need to edit THIS file to customize the entire website!
- * 2. Or, open "generator.html" in your browser to fill a simple form 
- *    and generate this file automatically without touching code.
- * 
- * ⚠️ Replace all placeholder values below with your own details.
+ * 💡 EASY CUSTOMIZATION:
+ * 1. Edit this file directly OR use the "Personalize" button on the website!
+ * 2. To change photos when cloning: simply drag & drop your photos into
+ *    "assets/images/photo1.jpg", "photo2.jpg", "photo3.jpg", "photo4.jpg"!
  * ===================================================================
  */
 
@@ -17,36 +15,33 @@ const CONFIG = {
   sisterName: "Gudiya",                    // Sister's name (e.g., "Priya", "Simran", "Chhoti")
   sisterNickname: "Meri Nautanki Behen",   // Sister's sweet/funny nickname
   brotherName: "Tera Bhai",               // Your name / signature (e.g., "Aman", "Rahul", "Tera Bhai")
-  festivalYear: "2026",                   // Festival year or date
-  relationBadge: "World's Best Sister Ever 👑", // Badge displayed at the top
+  festivalYear: "2026",                   // Festival year
+  relationBadge: "World's Best Sister Ever 👑", // Badge at top
 
-  // ─── 2. SOCIAL SHARE & META TAGS (WhatsApp / Instagram Previews) ─
+  // ─── 2. SOCIAL SHARE & PREVIEWS ──────────────────────────────────
   meta: {
     pageTitle: "Happy Raksha Bandhan, Meri Pyari Behena! 🌸",
     description: "A special digital Raksha Bandhan surprise from your brother with lots of love, memories, and treat vouchers!",
-    previewImage: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80"
+    previewImage: "assets/images/photo1.jpg"
   },
 
   // ─── 3. HERO / WELCOME SECTION ───────────────────────────────────
   hero: {
     badge: "🌸 Raksha Bandhan Special Surprise 🌸",
-    mainHeading: "Happy Rakhi, Meri Pyari Behena! ❤️",
+    mainHeading: "Happy Rakhi, {SISTER_NAME}! ❤️",
     tagline: "Chahe hum kitne bhi door kyu na ho, tera bhai hamesha tere dil ke sabse paas hai.",
-    subtext: "Tere liye ek chhota sa digital surprise banaya hai, scroll karke dekh! ✨",
-    letterBtnText: "💌 Read Bhai's Letter",
-    memoriesBtnText: "📸 Hamari Yaadein"
+    subtext: "Tere liye ek chhota sa digital surprise banaya hai, scroll karke dekh! ✨"
   },
 
-  // ─── 4. BACKGROUND MUSIC (Sangeet) ───────────────────────────────
+  // ─── 4. BACKGROUND MUSIC ─────────────────────────────────────────
   audio: {
-    enabled: true,                         // Set false if you don't want background music
+    enabled: true,
     songTitle: "Phoolon Ka Taaron Ka (Lata Mangeshkar)",
-    // Local audio file path or external MP3 link:
     customAudioUrl: "assets/audio/phoolon-ka-taaron-ka.mp3",
-    volume: 0.5                            // 0.0 (silent) to 1.0 (full volume)
+    volume: 0.5
   },
 
-  // ─── 5. EMOTIONAL LETTER ("Bhai Ki Chitthi") ─────────────────────
+  // ─── 5. BHAI KI CHITTHI (The Emotional Letter) ───────────────────
   letter: {
     tag: "For My Dearest Sister",
     title: "Pyari Behena ke Naam, Bhai Ki Chitthi 💌",
@@ -68,46 +63,42 @@ const CONFIG = {
     signature: "Tera Bhai ❤️"
   },
 
-  // ─── 6. NOSTALGIC MEMORIES (Photo Scrapbook) ─────────────────────
-  // You can add as many photos as you want!
-  // Use local images: "assets/images/photo1.jpg" or online URLs
+  // ─── 6. MEMORIES (Photo Scrapbook) ───────────────────────────────
+  // Replace photo1.jpg .. photo4.jpg in "assets/images/" or drag & drop!
   memories: [
     {
       title: "Bachpan Ki Mastiyaan 👶",
       caption: "Jab bina kisi wajah hum dono poore ghar me shor machate the!",
       date: "Sweet Old Days",
-      image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80",
+      image: "assets/images/photo1.jpg",
       rotation: "-2deg"
     },
     {
       title: "Tom & Jerry Wali Ladai 📺",
       caption: "Cartoon Network vs Saas Bahu! Par 5 minute baad wapas best friends.",
       date: "Classic Sibling Fights",
-      image: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80",
+      image: "assets/images/photo2.jpg",
       rotation: "2.5deg"
     },
     {
       title: "Traditional Festival Vibes 🥻",
       caption: "Jab bhi traditional kapde pehente the, photo click karwana compulsory tha!",
       date: "Festive Vibes",
-      image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80",
+      image: "assets/images/photo3.jpg",
       rotation: "-1.5deg"
     },
     {
       title: "Partners in Crime 🤝",
       caption: "Mummy ko bina bataye ice-cream khana aur secret treats!",
       date: "Forever Bond",
-      image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80",
+      image: "assets/images/photo4.jpg",
       rotation: "2deg"
     }
   ],
 
   // ─── 7. SIBLING PRIVILEGE PASSES & VOUCHERS ──────────────────────
-  // WhatsApp Claim Button uses your phone number and custom message template!
   whatsapp: {
-    // Brother's phone number with Country Code (NO + or - or spaces, e.g. "919876543210")
-    // Leave empty "" to open WhatsApp share sheet generally without a specific number.
-    number: "919876543210",
+    number: "919876543210",               // Brother's phone number with Country Code (e.g. 919876543210)
     messageTemplate: "Hey {BROTHER_NAME}! 🌸\nMaine Raksha Bandhan special website par ye voucher claim kiya hai:\n\n🎟️ *{VOUCHER_TITLE}*\n🔑 Code: *{VOUCHER_CODE}*\n\nAb jaldi se mera treat/pass redeem karo! 😋❤️"
   },
 
@@ -146,16 +137,15 @@ const CONFIG = {
     }
   ],
 
-  // ─── 8. RAKHI SHAGUN KA LIFAFA (Gift / UPI) ──────────────────────
+  // ─── 8. INTERACTIVE SHAGUN LIFAFA (UPI Request & Gifting) ─────────
   shagun: {
-    badge: "Rakhi Gift",
-    title: "Bhai Ki Taraf Se Shagun Ka Lifafa 💌",
-    message: "Meri taraf se shagun ka lifafa! Khush reh aur khoob shopping kar!",
-    giftCardCode: "RAKHI-2026-BHAI-TREAT",
-    showUpi: true,                         // Set false if you don't want to show UPI
-    upiId: "brother@upi",                  // Replace with your UPI ID or leave placeholder
-    // Auto-generates QR code from UPI ID, or replace with custom QR image URL:
-    qrImagePlaceholder: "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=brother@upi&pn=Bhai&cu=INR"
+    badge: "Rakhi Shagun",
+    title: "🎁 Shagun Ka Digital Lifafa",
+    message: "Bhai se shagun maangne ka digital tarika! Amount choose karo aur request bhej do!",
+    brotherUpiId: "brother@upi",           // Brother's UPI ID (configured by Bhai)
+    giftCardCode: "RAKHI-2026-BHAI-TREAT", // Shopping gift card code
+    quickAmounts: [501, 1100, 2100, 5000], // Preset amounts for sister to pick
+    defaultNote: "Shopping aur treat ke liye shagun bhejo bhaiya! 🛍️❤️"
   },
 
   // ─── 9. FOOTER ───────────────────────────────────────────────────
@@ -165,7 +155,6 @@ const CONFIG = {
   }
 };
 
-// Global export for node/module compatibility
 if (typeof module !== "undefined" && module.exports) {
   module.exports = CONFIG;
 }

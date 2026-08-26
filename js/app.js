@@ -1,12 +1,11 @@
 /**
  * ===================================================================
- * 🌸 PYARI BEHENA - MAIN APP & PERSONALIZE MODAL SYSTEM
+ * 🌸 PYARI BEHENA - MAIN APP, SMART SHAGUN & DRAG-AND-DROP SYSTEM
  * ===================================================================
  */
 
 class RakhiApp {
   constructor() {
-    this.tempModalPhotos = [];
     this.loadUrlConfig();
     this.init();
   }
@@ -100,30 +99,10 @@ class RakhiApp {
       if (heroSubtext && CONFIG.hero.subtext) heroSubtext.innerText = CONFIG.hero.subtext;
     }
 
-    // Shagun Section
+    // Shagun Voucher Code
     if (CONFIG.shagun) {
-      const shagunTitle = document.getElementById('shagunTitle');
-      if (shagunTitle && CONFIG.shagun.title) shagunTitle.innerText = CONFIG.shagun.title;
-
-      const shagunNote = document.getElementById('shagunGiftNote');
-      if (shagunNote && CONFIG.shagun.message) shagunNote.innerText = CONFIG.shagun.message;
-
       const giftCode = document.getElementById('shagunGiftCode');
       if (giftCode && CONFIG.shagun.giftCardCode) giftCode.innerText = CONFIG.shagun.giftCardCode;
-
-      const upiBox = document.getElementById('shagunUpiContainer');
-      const upiText = document.getElementById('shagunUpiText');
-      const qrImg = document.getElementById('shagunQrImage');
-
-      if (CONFIG.shagun.showUpi && CONFIG.shagun.upiId) {
-        if (upiText) upiText.innerText = CONFIG.shagun.upiId;
-        if (qrImg) {
-          const qrUrl = CONFIG.shagun.qrImagePlaceholder || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=${encodeURIComponent(CONFIG.shagun.upiId)}&pn=${encodeURIComponent(brotherName)}&cu=INR`;
-          qrImg.src = qrUrl;
-        }
-      } else if (upiBox) {
-        upiBox.classList.add('hidden');
-      }
     }
   }
 
@@ -208,11 +187,21 @@ class RakhiApp {
       const title = mem.title || "Sweet Memory";
       const caption = mem.caption || "A moment to remember forever ❤️";
       const date = mem.date || "Memory";
-      const imgSrc = mem.image || "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80";
+      const imgSrc = mem.image || "assets/images/photo1.jpg";
 
       card.innerHTML = `
-        <div class="relative overflow-hidden rounded-md bg-amber-50 aspect-[4/3]">
-          <img id="memory-img-${index}" src="${imgSrc}" alt="${title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80'">
+        <div class="relative overflow-hidden rounded-md bg-amber-50 aspect-[4/3]"
+             ondragover="event.preventDefault(); this.classList.add('ring-2', 'ring-rose-500')"
+             ondragleave="this.classList.remove('ring-2', 'ring-rose-500')"
+             ondrop="window.rakhiApp.handleDropPhoto(${index}, event)">
+          <img id="memory-img-${index}" src="${imgSrc}" alt="${title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='assets/images/photo1.jpg'">
+          
+          <!-- In-Place Photo Change Button -->
+          <div class="photo-upload-overlay absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white transition-opacity gap-1" onclick="window.rakhiApp.triggerPhotoUpload(${index}, event)">
+            <span class="text-xl">📷</span>
+            <span class="text-[10px] font-bold bg-white/20 px-2 py-0.5 rounded-full backdrop-blur-sm">Drag or Click Photo</span>
+          </div>
+
           <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
             ${date}
           </div>
@@ -223,7 +212,8 @@ class RakhiApp {
         </div>
       `;
 
-      card.addEventListener('click', () => {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('.photo-upload-overlay')) return;
         if (window.soundSystem && typeof window.soundSystem.playClick === 'function') {
           window.soundSystem.playClick();
         }
@@ -234,48 +224,53 @@ class RakhiApp {
     });
   }
 
-  /* ─── PERSONALIZE MODAL FUNCTIONS ─── */
-  openPersonalizeModal() {
-    if (window.soundSystem && typeof window.soundSystem.playClick === 'function') {
-      window.soundSystem.playClick();
+  /* ─── DRAG & DROP PHOTO HANDLER ─── */
+  handleDropPhoto(index, event) {
+    event.preventDefault();
+    if (event.currentTarget) {
+      event.currentTarget.classList.remove('ring-2', 'ring-rose-500');
     }
-
-    const modal = document.getElementById('personalizeModal');
-    if (!modal) return;
-
-    // Prefill current values
-    const sisterInput = document.getElementById('modalSisterName');
-    const brotherInput = document.getElementById('modalBrotherName');
-    const whatsappInput = document.getElementById('modalWhatsappNumber');
-    const upiInput = document.getElementById('modalUpiId');
-
-    if (sisterInput) sisterInput.value = CONFIG.sisterName || "Gudiya";
-    if (brotherInput) brotherInput.value = CONFIG.brotherName || "Tera Bhai";
-    if (whatsappInput) whatsappInput.value = (CONFIG.whatsapp && CONFIG.whatsapp.number) ? CONFIG.whatsapp.number : "919876543210";
-    if (upiInput) upiInput.value = (CONFIG.shagun && CONFIG.shagun.upiId) ? CONFIG.shagun.upiId : "brother@upi";
-
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
+    const files = event.dataTransfer.files;
+    if (files && files.length > 0) {
+      this.compressAndSavePhoto(index, files[0]);
+    }
   }
 
-  closePersonalizeModal() {
-    const modal = document.getElementById('personalizeModal');
-    if (modal) {
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
+  triggerPhotoUpload(index, event) {
+    if (event) event.stopPropagation();
+    
+    let fileInput = document.getElementById('livePhotoFileInput');
+    if (!fileInput) {
+      fileInput = document.createElement('input');
+      fileInput.id = 'livePhotoFileInput';
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.style.display = 'none';
+      document.body.appendChild(fileInput);
     }
+
+    fileInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      this.compressAndSavePhoto(index, file);
+    };
+
+    fileInput.click();
   }
 
   handleModalPhoto(index, event) {
     const file = event.target.files[0];
     if (!file) return;
+    this.compressAndSavePhoto(index, file);
+  }
 
+  compressAndSavePhoto(index, file) {
     const reader = new FileReader();
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const maxDim = 600;
+        const maxDim = 650;
         let w = img.width;
         let h = img.height;
         if (w > maxDim || h > maxDim) {
@@ -291,25 +286,112 @@ class RakhiApp {
         canvas.height = h;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, w, h);
-        const compressed = canvas.toDataURL('image/jpeg', 0.72);
+        const compressedData = canvas.toDataURL('image/jpeg', 0.72);
 
         if (!CONFIG.memories[index]) {
           CONFIG.memories[index] = { title: `Memory #${index + 1}`, caption: "Special moment", date: "Yaadein" };
         }
-        CONFIG.memories[index].image = compressed;
-        this.renderMemories();
-        alert(`✅ Photo ${index + 1} uploaded successfully!`);
+        CONFIG.memories[index].image = compressedData;
+        
+        const imgEl = document.getElementById(`memory-img-${index}`);
+        if (imgEl) imgEl.src = compressedData;
+
+        if (window.festiveEffects) window.festiveEffects.celebrate('medium');
       };
       img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   }
 
+  /* ─── SMART SHAGUN REQUEST TO BHAI ─── */
+  selectShagunAmount(amt) {
+    const input = document.getElementById('shagunReqAmount');
+    if (input) {
+      input.value = amt;
+      if (window.soundSystem && typeof window.soundSystem.playClick === 'function') {
+        window.soundSystem.playClick();
+      }
+    }
+  }
+
+  sendShagunRequestToBhai() {
+    const amount = document.getElementById('shagunReqAmount').value || "1100";
+    const sisterUpi = document.getElementById('sisterUpiId').value.trim();
+    const note = document.getElementById('shagunSisterNote').value.trim() || "Shopping shagun from Bhai! ❤️";
+    const brotherName = CONFIG.brotherName || "Bhai";
+    const sisterName = CONFIG.sisterName || "Gudiya";
+
+    if (!sisterUpi) {
+      alert("⚠️ Please enter your UPI ID (e.g. yourname@oksbi or paytm) so Bhai can pay you!");
+      document.getElementById('sisterUpiId').focus();
+      return;
+    }
+
+    // Auto-Payable UPI Deep Link for Bhai:
+    const upiPayUrl = `upi://pay?pa=${encodeURIComponent(sisterUpi)}&pn=${encodeURIComponent(sisterName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(note)}&cu=INR`;
+
+    // Show live QR Code for scanning
+    const qrContainer = document.getElementById('sisterQrContainer');
+    const qrImg = document.getElementById('sisterLiveQrImg');
+    if (qrContainer && qrImg) {
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiPayUrl)}`;
+      qrContainer.classList.remove('hidden');
+    }
+
+    if (window.festiveEffects) window.festiveEffects.celebrate('high');
+
+    // Build WhatsApp message for Bhai with 1-tap auto-pay link
+    const whatsappMsg = `Hey ${brotherName}! 🌸\nMaine Raksha Bandhan special website se shagun request kiya hai:\n\n💸 *Amount: ₹${amount}*\n💌 *Note:* ${note}\n📲 *My UPI ID:* ${sisterUpi}\n\n👉 *Bhai Click Here to 1-Tap Pay directly via UPI:*\n${upiPayUrl}\n\nLove you Bhai! Jaldi approve karo! 😋❤️`;
+
+    const encodedText = encodeURIComponent(whatsappMsg);
+    const phone = (CONFIG.whatsapp && CONFIG.whatsapp.number) ? CONFIG.whatsapp.number.replace(/[^0-9]/g, '') : '';
+
+    let url = '';
+    if (phone && phone.length >= 7) {
+      url = `https://wa.me/${phone}?text=${encodedText}`;
+    } else {
+      url = `https://api.whatsapp.com/send?text=${encodedText}`;
+    }
+
+    window.open(url, '_blank');
+  }
+
+  /* ─── PERSONALIZE MODAL ─── */
+  openPersonalizeModal() {
+    if (window.soundSystem && typeof window.soundSystem.playClick === 'function') {
+      window.soundSystem.playClick();
+    }
+
+    const modal = document.getElementById('personalizeModal');
+    if (!modal) return;
+
+    const sisterInput = document.getElementById('modalSisterName');
+    const brotherInput = document.getElementById('modalBrotherName');
+    const whatsappInput = document.getElementById('modalWhatsappNumber');
+    const brotherUpiInput = document.getElementById('modalBrotherUpi');
+
+    if (sisterInput) sisterInput.value = CONFIG.sisterName || "Gudiya";
+    if (brotherInput) brotherInput.value = CONFIG.brotherName || "Tera Bhai";
+    if (whatsappInput) whatsappInput.value = (CONFIG.whatsapp && CONFIG.whatsapp.number) ? CONFIG.whatsapp.number : "919876543210";
+    if (brotherUpiInput) brotherUpiInput.value = (CONFIG.shagun && CONFIG.shagun.brotherUpiId) ? CONFIG.shagun.brotherUpiId : "brother@upi";
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  closePersonalizeModal() {
+    const modal = document.getElementById('personalizeModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  }
+
   applyModalChanges() {
     const sisterInput = document.getElementById('modalSisterName');
     const brotherInput = document.getElementById('modalBrotherName');
     const whatsappInput = document.getElementById('modalWhatsappNumber');
-    const upiInput = document.getElementById('modalUpiId');
+    const brotherUpiInput = document.getElementById('modalBrotherUpi');
 
     if (sisterInput && sisterInput.value.trim()) {
       CONFIG.sisterName = sisterInput.value.trim();
@@ -321,9 +403,9 @@ class RakhiApp {
       if (!CONFIG.whatsapp) CONFIG.whatsapp = {};
       CONFIG.whatsapp.number = whatsappInput.value.trim();
     }
-    if (upiInput && upiInput.value.trim()) {
+    if (brotherUpiInput && brotherUpiInput.value.trim()) {
       if (!CONFIG.shagun) CONFIG.shagun = {};
-      CONFIG.shagun.upiId = upiInput.value.trim();
+      CONFIG.shagun.brotherUpiId = brotherUpiInput.value.trim();
     }
 
     this.bindConfigData();
@@ -336,11 +418,9 @@ class RakhiApp {
     if (window.soundSystem && typeof window.soundSystem.playBackgroundMusic === 'function') {
       window.soundSystem.playBackgroundMusic();
     }
-    if (window.festiveEffects && typeof window.festiveEffects.celebrate === 'function') {
-      window.festiveEffects.celebrate('high');
-    }
+    if (window.festiveEffects) window.festiveEffects.celebrate('high');
 
-    alert(`🎉 Website customized for ${CONFIG.sisterName}! Scroll down to view your surprise!`);
+    alert(`🎉 Website customized for ${CONFIG.sisterName}!`);
   }
 
   shareOnWhatsAppFromModal() {
