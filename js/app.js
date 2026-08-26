@@ -1,6 +1,6 @@
 /**
  * ===================================================================
- * 🌸 PYARI BEHENA - MAIN APP, LARGE MEMORIES, LETTER EDITING & SHAGUN
+ * 🌸 PYARI BEHENA - MAIN APP, MOTION DESIGN, LETTER & SHAGUN 🌸
  * ===================================================================
  */
 
@@ -42,6 +42,7 @@ class RakhiApp {
     this.renderLetter();
     this.renderMemories();
     this.renderTraits();
+    this.setupScrollReveal();
     this.bindGlobalEvents();
   }
 
@@ -121,6 +122,9 @@ class RakhiApp {
   initAudioPlayer() {
     const audioToggleBtn = document.getElementById('floatingAudioToggle');
     const audioTitleEl = document.getElementById('audioTrackTitle');
+    const vinylEl = document.getElementById('audioVinylDisc');
+    const waveBarsEl = document.getElementById('audioWaveBars');
+    const audioSubtext = document.getElementById('audioButtonSubtext');
 
     if (CONFIG.audio && CONFIG.audio.enabled) {
       if (audioTitleEl && CONFIG.audio.songTitle) {
@@ -131,11 +135,29 @@ class RakhiApp {
         window.soundSystem.initBackgroundMusic(CONFIG.audio.customAudioUrl, CONFIG.audio.volume || 0.5);
       }
 
+      const updateVisualizerState = () => {
+        const isPlaying = window.soundSystem && window.soundSystem.isPlaying;
+        if (vinylEl) {
+          if (isPlaying) {
+            vinylEl.classList.add('animate-vinyl');
+          } else {
+            vinylEl.classList.remove('animate-vinyl');
+          }
+        }
+        if (waveBarsEl) {
+          waveBarsEl.style.opacity = isPlaying ? '1' : '0.2';
+        }
+        if (audioSubtext) {
+          audioSubtext.innerText = isPlaying ? "Playing • Tap to Mute" : "Paused • Tap to Play";
+        }
+      };
+
       if (audioToggleBtn) {
         audioToggleBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           if (window.soundSystem) {
             window.soundSystem.toggleBackgroundMusic();
+            setTimeout(updateVisualizerState, 150);
           }
         });
       }
@@ -145,6 +167,7 @@ class RakhiApp {
           window.soundSystem.resumeContext();
           if (window.soundSystem.autoplayBlocked && !window.soundSystem.isPlaying) {
             window.soundSystem.playBackgroundMusic();
+            setTimeout(updateVisualizerState, 200);
           }
         }
         window.removeEventListener('click', handleFirstInteraction);
@@ -155,6 +178,38 @@ class RakhiApp {
       window.addEventListener('touchstart', handleFirstInteraction, { passive: true });
     } else if (audioToggleBtn) {
       audioToggleBtn.classList.add('hidden');
+    }
+  }
+
+  setupScrollReveal() {
+    const reveals = document.querySelectorAll('.reveal-on-scroll');
+    if (!reveals || reveals.length === 0) return;
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal-visible');
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      reveals.forEach(el => observer.observe(el));
+    } else {
+      reveals.forEach(el => el.classList.add('reveal-visible'));
+    }
+  }
+
+  triggerRakhiBlessing(event) {
+    if (window.soundSystem && typeof window.soundSystem.playSparkle === 'function') {
+      window.soundSystem.playSparkle();
+    }
+    if (window.festiveEffects) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      window.festiveEffects.burstPetals(x, y);
+      window.festiveEffects.celebrate('medium');
     }
   }
 
@@ -179,7 +234,7 @@ class RakhiApp {
 
     if (promisesList && Array.isArray(CONFIG.letter.promises)) {
       promisesList.innerHTML = CONFIG.letter.promises.map(item => `
-        <li class="flex items-center gap-2 text-xs sm:text-sm text-rose-800 font-medium bg-rose-50/90 p-2.5 rounded-xl border border-rose-200/60 shadow-sm">
+        <li class="flex items-center gap-2 text-xs sm:text-sm text-rose-800 font-medium bg-rose-50/90 p-2.5 rounded-xl border border-rose-200/60 shadow-xs">
           <span>${item}</span>
         </li>
       `).join('');
@@ -207,10 +262,10 @@ class RakhiApp {
       card.innerHTML = `
         <!-- Top Controls: Drag Grip & Delete Button -->
         <div class="flex items-center justify-between mb-3">
-          <span class="text-xs font-bold text-amber-800/70 select-none flex items-center gap-1.5 cursor-grab bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200" title="Drag to re-order position">
+          <span class="text-xs font-bold text-amber-800/70 select-none flex items-center gap-1.5 cursor-grab bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200 shadow-xs" title="Drag to re-order position">
             <span class="text-base">⠿</span> Drag to Move
           </span>
-          <button onclick="window.rakhiApp.deleteMemory(${index}, event)" class="w-7 h-7 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 text-sm flex items-center justify-center transition shadow-sm font-bold" title="Delete this memory">
+          <button onclick="window.rakhiApp.deleteMemory(${index}, event)" class="w-7 h-7 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 text-sm flex items-center justify-center transition shadow-xs font-bold" title="Delete this memory">
             ✕
           </button>
         </div>
@@ -688,11 +743,12 @@ class RakhiApp {
 
     const waxSeal = document.querySelector('.wax-seal');
     if (waxSeal) {
-      waxSeal.addEventListener('click', () => {
+      waxSeal.addEventListener('click', (e) => {
         if (window.soundSystem && typeof window.soundSystem.playSparkle === 'function') {
           window.soundSystem.playSparkle();
         }
-        if (window.festiveEffects && typeof window.festiveEffects.celebrate === 'function') {
+        if (window.festiveEffects) {
+          window.festiveEffects.burstPetals(e.clientX, e.clientY);
           window.festiveEffects.celebrate('medium');
         }
       });

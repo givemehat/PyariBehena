@@ -1,14 +1,14 @@
 /* ===================================================================
-   🌸 PYARI BEHENA - RAKSHA BANDHAN ANIMATIONS & KEYFRAMES 🌸
+   🌸 PYARI BEHENA - MASTER ANIMATIONS & MOTION DESIGN 🌸
    =================================================================== */
 
 @keyframes pulseGold {
   0%, 100% {
-    box-shadow: 0 0 15px rgba(245, 158, 11, 0.4), inset 0 0 10px rgba(245, 158, 11, 0.2);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.35), inset 0 0 12px rgba(245, 158, 11, 0.2);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 30px rgba(245, 158, 11, 0.8), inset 0 0 20px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.65), inset 0 0 25px rgba(245, 158, 11, 0.35);
     transform: scale(1.03);
   }
 }
@@ -18,7 +18,7 @@
     transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(-12px) rotate(2deg);
+    transform: translateY(-10px) rotate(1.5deg);
   }
 }
 
@@ -27,155 +27,115 @@
     transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(12px) rotate(-2deg);
+    transform: translateY(10px) rotate(-1.5deg);
   }
 }
 
 @keyframes spinSlow {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-@keyframes aartiRevolve {
-  0% {
-    transform: rotate(0deg) translateX(30px) rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg) translateX(30px) rotate(-360deg);
-  }
+@keyframes vinylSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+@keyframes waveBar {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
+
+@keyframes shimmerText {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 @keyframes bounceSubtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes envelopeGlow {
   0%, 100% {
-    transform: translateY(0);
+    box-shadow: 0 10px 30px -10px rgba(190, 18, 60, 0.3);
   }
   50% {
-    transform: translateY(-8px);
+    box-shadow: 0 20px 45px -10px rgba(245, 158, 11, 0.5);
   }
 }
 
-@keyframes ribbonPop {
-  0% {
-    transform: scale(0.6) rotate(-15deg);
-    opacity: 0;
-  }
-  70% {
-    transform: scale(1.1) rotate(5deg);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
+@keyframes stampPress {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.9) rotate(-6deg); }
+  100% { transform: scale(1) rotate(0deg); }
 }
 
-@keyframes tilakGlow {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.4);
-    opacity: 1;
-    box-shadow: 0 0 25px #ef4444;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-    box-shadow: 0 0 10px #ef4444;
-  }
+/* 🌟 SCROLL REVEAL UTILITIES */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
-@keyframes rakhiTie {
-  0% {
-    transform: scale(0.2) rotate(-90deg);
-    opacity: 0;
-  }
-  60% {
-    transform: scale(1.15) rotate(10deg);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
+.reveal-on-scroll.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-/* Utility Animation Classes */
+.stagger-1 { transition-delay: 0.1s; }
+.stagger-2 { transition-delay: 0.2s; }
+.stagger-3 { transition-delay: 0.3s; }
+.stagger-4 { transition-delay: 0.4s; }
+
+/* 🌟 ANIMATION HELPER CLASSES */
 .animate-float {
-  animation: floatSlow 4s infinite ease-in-out;
+  animation: floatSlow 5s ease-in-out infinite;
 }
 
 .animate-float-reverse {
-  animation: floatReverse 4.5s infinite ease-in-out;
+  animation: floatReverse 6s ease-in-out infinite;
+}
+
+.animate-pulse-gold {
+  animation: pulseGold 3.5s infinite;
 }
 
 .animate-spin-slow {
   animation: spinSlow 20s linear infinite;
 }
 
+.animate-vinyl {
+  animation: vinylSpin 3s linear infinite;
+}
+
 .animate-bounce-subtle {
-  animation: bounceSubtle 2.5s infinite ease-in-out;
+  animation: bounceSubtle 3s ease-in-out infinite;
 }
 
-.animate-pulse-gold {
-  animation: pulseGold 2s infinite ease-in-out;
+.envelope-animated {
+  animation: envelopeGlow 4s ease-in-out infinite;
 }
 
-.animate-shimmer {
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 2.5s infinite;
+/* Audio Visualizer Bars */
+.music-bar {
+  width: 3px;
+  background: #e11d48;
+  border-radius: 2px;
+  animation: waveBar 1.2s ease-in-out infinite;
 }
 
-.animate-tilak {
-  animation: tilakGlow 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
+.music-bar:nth-child(1) { animation-delay: 0.1s; }
+.music-bar:nth-child(2) { animation-delay: 0.3s; }
+.music-bar:nth-child(3) { animation-delay: 0.2s; }
+.music-bar:nth-child(4) { animation-delay: 0.4s; }
 
-.animate-rakhi {
-  animation: rakhiTie 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-/* Interactive Card Flip */
-.flip-card-inner {
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-}
-
-.flip-card-inner.flipped {
-  transform: rotateY(180deg);
-}
-
-.flip-card-front, .flip-card-back {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.flip-card-back {
-  transform: rotateY(180deg);
-}
-
-/* Modal Open Animations */
-.modal-enter {
-  opacity: 0;
-  transform: scale(0.9) translateY(20px);
-}
-
-.modal-enter-active {
-  opacity: 1;
-  transform: scale(1) translateY(0);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+/* Shimmer on Headings */
+.shimmer-gold {
+  background: linear-gradient(90deg, #b45309 0%, #fbbf24 50%, #b45309 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmerText 6s linear infinite;
 }

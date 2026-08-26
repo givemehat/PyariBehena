@@ -1,6 +1,6 @@
 /**
  * ===================================================================
- * 🌸 PYARI BEHENA - VISUAL EFFECTS & CANVAS PARTICLES 🌸
+ * 🌸 PYARI BEHENA - VISUAL EFFECTS, PETALS & MOTION ENGINE 🌸
  * ===================================================================
  */
 
@@ -10,12 +10,13 @@ class FestiveEffects {
     this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
     this.petals = [];
     this.sparkles = [];
+    this.bursts = [];
     
     // Check user preference for reduced motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.reducedMotion = prefersReducedMotion;
     
-    this.numberOfPetals = this.reducedMotion ? 0 : (window.innerWidth < 768 ? 20 : 38);
+    this.numberOfPetals = this.reducedMotion ? 0 : (window.innerWidth < 768 ? 22 : 40);
     this.mouse = { x: -1000, y: -1000 };
 
     if (this.canvas && this.ctx && !this.reducedMotion) {
@@ -35,7 +36,6 @@ class FestiveEffects {
   setupListeners() {
     window.addEventListener('resize', () => this.resize());
     
-    // Listen for changes in user's reduced-motion preference
     window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
       this.reducedMotion = e.matches;
       if (this.reducedMotion) {
@@ -43,7 +43,7 @@ class FestiveEffects {
         this.sparkles = [];
         if (this.ctx) this.ctx.clearRect(0, 0, this.width, this.height);
       } else {
-        this.numberOfPetals = window.innerWidth < 768 ? 20 : 38;
+        this.numberOfPetals = window.innerWidth < 768 ? 22 : 40;
         this.initPetals();
         this.animate();
       }
@@ -54,7 +54,9 @@ class FestiveEffects {
       if (this.reducedMotion) return;
       this.mouse.x = e.clientX;
       this.mouse.y = e.clientY;
-      this.addSparkle(e.clientX, e.clientY);
+      if (Math.random() > 0.4) {
+        this.addSparkle(e.clientX, e.clientY);
+      }
     });
 
     // Touch sparkle
@@ -69,12 +71,12 @@ class FestiveEffects {
 
   initPetals() {
     const petalColors = [
-      '#f59e0b', // Marigold Yellow-Orange
-      '#fbbf24', // Bright Marigold
+      '#f59e0b', // Marigold Amber
+      '#fbbf24', // Bright Gold
       '#ea580c', // Saffron
-      '#f43f5e', // Rose Red
+      '#f43f5e', // Rose
       '#fda4af', // Soft Rose Pink
-      '#be123c'  // Deep Crimson
+      '#be123c'  // Deep Maroon
     ];
 
     this.petals = [];
@@ -82,9 +84,9 @@ class FestiveEffects {
       this.petals.push({
         x: Math.random() * this.width,
         y: Math.random() * this.height - this.height,
-        size: Math.random() * 11 + 7,
+        size: Math.random() * 12 + 8,
         color: petalColors[Math.floor(Math.random() * petalColors.length)],
-        speedY: Math.random() * 1.2 + 0.6,
+        speedY: Math.random() * 1.3 + 0.7,
         speedX: Math.random() * 0.8 - 0.4,
         rotation: Math.random() * 360,
         rotationSpeed: Math.random() * 1.8 - 0.9,
@@ -98,18 +100,40 @@ class FestiveEffects {
   }
 
   addSparkle(x, y) {
-    if (Math.random() > 0.4) return;
-    const colors = ['#f59e0b', '#fbbf24', '#fef08a', '#fda4af', '#ffffff'];
+    if (this.sparkles.length > 25) return;
     this.sparkles.push({
-      x: x + (Math.random() * 14 - 7),
-      y: y + (Math.random() * 14 - 7),
+      x: x + (Math.random() * 16 - 8),
+      y: y + (Math.random() * 16 - 8),
       size: Math.random() * 3.5 + 1.5,
-      color: colors[Math.floor(Math.random() * colors.length)],
       alpha: 1,
-      decay: Math.random() * 0.03 + 0.025,
-      vy: Math.random() * -1.2 - 0.4,
-      vx: (Math.random() - 0.5) * 1.2
+      decay: Math.random() * 0.035 + 0.02,
+      color: Math.random() > 0.5 ? '#f59e0b' : '#fbbf24',
+      vx: (Math.random() - 0.5) * 1.2,
+      vy: (Math.random() - 0.5) * 1.2 - 0.5
     });
+  }
+
+  // Interactive Flower Petal Burst on click/tap
+  burstPetals(x, y) {
+    if (this.reducedMotion) return;
+    const colors = ['#f59e0b', '#fbbf24', '#f43f5e', '#be123c', '#ffffff'];
+    for (let i = 0; i < 24; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = Math.random() * 6 + 2;
+      this.bursts.push({
+        x: x || window.innerWidth / 2,
+        y: y || window.innerHeight / 2,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 1.5,
+        size: Math.random() * 10 + 6,
+        rotation: Math.random() * 360,
+        rotationSpeed: (Math.random() - 0.5) * 8,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: 1,
+        decay: Math.random() * 0.02 + 0.015,
+        gravity: 0.15
+      });
+    }
   }
 
   drawPetal(p) {
@@ -118,16 +142,16 @@ class FestiveEffects {
     ctx.translate(p.x, p.y);
     ctx.rotate((p.rotation * Math.PI) / 180);
     ctx.fillStyle = p.color;
-    ctx.beginPath();
+    ctx.globalAlpha = 0.78;
 
+    ctx.beginPath();
     if (p.isRound) {
-      ctx.ellipse(0, 0, p.size * 0.6, p.size, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 0, p.size, p.size * 0.6, 0, 0, Math.PI * 2);
     } else {
       ctx.moveTo(0, -p.size);
-      ctx.bezierCurveTo(p.size * 0.8, -p.size * 0.5, p.size * 0.8, p.size * 0.5, 0, p.size);
-      ctx.bezierCurveTo(-p.size * 0.8, p.size * 0.5, -p.size * 0.8, -p.size * 0.5, 0, -p.size);
+      ctx.quadraticCurveTo(p.size * 0.8, -p.size * 0.2, 0, p.size);
+      ctx.quadraticCurveTo(-p.size * 0.8, -p.size * 0.2, 0, -p.size);
     }
-
     ctx.fill();
     ctx.restore();
   }
@@ -135,20 +159,24 @@ class FestiveEffects {
   drawSparkle(s) {
     const ctx = this.ctx;
     ctx.save();
-    ctx.globalAlpha = s.alpha;
+    ctx.globalAlpha = Math.max(0, s.alpha);
     ctx.fillStyle = s.color;
-
-    const x = s.x, y = s.y, r = s.size;
     ctx.beginPath();
-    ctx.moveTo(x, y - r * 1.5);
-    ctx.lineTo(x + r * 0.3, y - r * 0.3);
-    ctx.lineTo(x + r * 1.5, y);
-    ctx.lineTo(x + r * 0.3, y + r * 0.3);
-    ctx.lineTo(x, y + r * 1.5);
-    ctx.lineTo(x - r * 0.3, y + r * 0.3);
-    ctx.lineTo(x - r * 1.5, y);
-    ctx.lineTo(x - r * 0.3, y - r * 0.3);
-    ctx.closePath();
+    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  drawBurst(b) {
+    const ctx = this.ctx;
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    ctx.rotate((b.rotation * Math.PI) / 180);
+    ctx.fillStyle = b.color;
+    ctx.globalAlpha = Math.max(0, b.alpha);
+
+    ctx.beginPath();
+    ctx.ellipse(0, 0, b.size, b.size * 0.55, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
   }
@@ -158,7 +186,7 @@ class FestiveEffects {
 
     this.ctx.clearRect(0, 0, this.width, this.height);
 
-    // Update & draw petals
+    // Update & draw falling petals
     for (let i = 0; i < this.petals.length; i++) {
       const p = this.petals[i];
       p.time += p.oscillationSpeed;
@@ -188,16 +216,32 @@ class FestiveEffects {
       }
     }
 
+    // Update & draw petal bursts
+    for (let i = this.bursts.length - 1; i >= 0; i--) {
+      const b = this.bursts[i];
+      b.x += b.vx;
+      b.y += b.vy;
+      b.vy += b.gravity;
+      b.rotation += b.rotationSpeed;
+      b.alpha -= b.decay;
+
+      if (b.alpha <= 0) {
+        this.bursts.splice(i, 1);
+      } else {
+        this.drawBurst(b);
+      }
+    }
+
     requestAnimationFrame(() => this.animate());
   }
 
   // Celebration Fireworks / Confetti
   celebrate(intensity = 'medium') {
     if (typeof confetti === 'function') {
-      const count = intensity === 'high' ? 100 : 50;
+      const count = intensity === 'high' ? 120 : 60;
       confetti({
         particleCount: count,
-        spread: 75,
+        spread: 80,
         origin: { y: 0.65 },
         colors: ['#f59e0b', '#be123c', '#fbbf24', '#f43f5e', '#ffffff']
       });
