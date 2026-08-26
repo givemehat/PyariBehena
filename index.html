@@ -103,7 +103,7 @@
        TOP BAR
        ========================================== -->
   <header class="w-full sticky top-0 z-40 backdrop-blur-md bg-white/80 border-b border-amber-200/50 px-4 py-3.5 shadow-sm">
-    <div class="max-w-4xl mx-auto flex items-center justify-between">
+    <div class="max-w-5xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-2">
         <span class="text-2xl animate-spin-slow">🌸</span>
         <span class="font-decorative text-lg md:text-xl font-bold maroon-gradient-text">
@@ -242,23 +242,31 @@
   </section>
 
   <!-- ==========================================
-       HAMARI YAADEIN (DRAG & DROP POLAROID SCRAPBOOK)
+       HAMARI YAADEIN (LARGE & REORDERABLE POLAROID SCRAPBOOK)
        ========================================== -->
-  <section id="memoriesSection" class="max-w-5xl mx-auto py-12 px-4">
+  <section id="memoriesSection" class="max-w-6xl mx-auto py-12 px-4">
     <div class="text-center mb-8">
       <span class="text-xs font-bold uppercase tracking-widest text-amber-700 bg-amber-100 px-3 py-1 rounded-full border border-amber-300">
-        Memories
+        Memories Scrapbook
       </span>
-      <h2 class="text-2xl sm:text-3xl font-bold font-heading text-zinc-900 mt-2">
+      <h2 class="text-2xl sm:text-4xl font-bold font-heading text-zinc-900 mt-2">
         📸 Hamari Pyari Yaadein
       </h2>
-      <p class="text-xs sm:text-sm text-zinc-600 max-w-md mx-auto mt-1">
-        Bachpan ki ladai se lekar aaj tak ki mastiyaan! Photo change karne ke liye drag & drop ya tap karein:
+      <p class="text-xs sm:text-sm text-zinc-600 max-w-lg mx-auto mt-1.5">
+        Photo change karne ke liye drag & drop karein, ya card ko drag karke apni pasand ki jagah par place karein! ✨
       </p>
+
+      <!-- Add Memory Action Button -->
+      <div class="mt-4 flex items-center justify-center gap-3">
+        <button onclick="window.rakhiApp.addNewMemory()" class="px-4 py-2 bg-gradient-to-r from-rose-600 to-amber-500 hover:from-rose-700 hover:to-amber-600 text-white font-bold text-xs rounded-full shadow-md hover:shadow-lg transition flex items-center gap-1.5 active:scale-95">
+          <span>➕</span> Add New Photo Memory
+        </button>
+      </div>
     </div>
 
-    <div id="memoriesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Dynamic memories rendered via js/app.js -->
+    <!-- Large 3-Column Grid for Big Stunning Polaroids -->
+    <div id="memoriesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Dynamic memories rendered via js/app.js with drag-reordering and delete controls -->
     </div>
   </section>
 

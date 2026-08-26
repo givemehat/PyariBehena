@@ -98,55 +98,51 @@ body {
   box-shadow: 0 15px 30px -5px rgba(136, 19, 55, 0.25);
 }
 
-/* Polaroid Card Styles */
+/* Bigger & More Prominent Polaroid Card Styles */
 .polaroid {
   background: #ffffff;
-  padding: 14px 14px 28px 14px;
-  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.05);
-  border-radius: 6px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  padding: 16px 16px 32px 16px;
+  box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.14), 0 8px 16px rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
+  cursor: grab;
+}
+
+.polaroid:active {
+  cursor: grabbing;
+}
+
+.polaroid.dragging {
+  opacity: 0.4;
+  transform: scale(0.95) !important;
+}
+
+.polaroid.drag-over {
+  border: 3px dashed #e11d48 !important;
+  transform: scale(1.05) !important;
 }
 
 .polaroid::before {
   content: '';
   position: absolute;
-  top: -10px;
+  top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  width: 65px;
-  height: 22px;
-  background-color: rgba(254, 240, 138, 0.75);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  backdrop-filter: blur(2px);
-  border-left: 2px dashed rgba(202, 138, 4, 0.3);
-  border-right: 2px dashed rgba(202, 138, 4, 0.3);
+  width: 80px;
+  height: 26px;
+  background-color: rgba(254, 240, 138, 0.85);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+  backdrop-filter: blur(3px);
+  border-left: 2px dashed rgba(202, 138, 4, 0.4);
+  border-right: 2px dashed rgba(202, 138, 4, 0.4);
   z-index: 10;
 }
 
 .polaroid:hover {
-  transform: scale(1.04) rotate(0deg) !important;
+  transform: scale(1.03) rotate(0deg) !important;
   z-index: 20;
-  box-shadow: 0 25px 40px -10px rgba(136, 19, 55, 0.25);
-}
-
-/* In-Place Live Edit Mode Styling */
-.edit-mode-active [contenteditable="true"] {
-  outline: 2px dashed #f59e0b !important;
-  outline-offset: 4px;
-  background-color: rgba(254, 243, 199, 0.25);
-  border-radius: 6px;
-  cursor: text;
-  transition: background-color 0.2s ease;
-}
-
-.edit-mode-active [contenteditable="true"]:hover {
-  background-color: rgba(254, 243, 199, 0.5);
-}
-
-.edit-mode-active [contenteditable="true"]:focus {
-  outline: 2px solid #e11d48 !important;
-  background-color: #ffffff;
+  box-shadow: 0 30px 45px -10px rgba(136, 19, 55, 0.3);
 }
 
 .photo-upload-overlay {

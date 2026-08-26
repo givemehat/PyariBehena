@@ -1,11 +1,12 @@
 /**
  * ===================================================================
- * 🌸 PYARI BEHENA - MAIN APP, SIBLING TRAITS & SMART SHAGUN SYSTEM
+ * 🌸 PYARI BEHENA - MAIN APP, REORDERABLE MEMORIES & SMART SHAGUN
  * ===================================================================
  */
 
 class RakhiApp {
   constructor() {
+    this.draggedCardIndex = null;
     this.loadUrlConfig();
     this.init();
   }
@@ -180,6 +181,7 @@ class RakhiApp {
     }
   }
 
+  /* ─── LARGE & REORDERABLE POLAROID MEMORIES ─── */
   renderMemories() {
     const grid = document.getElementById('memoriesGrid');
     if (!grid || !Array.isArray(CONFIG.memories)) return;
@@ -187,7 +189,9 @@ class RakhiApp {
 
     CONFIG.memories.forEach((mem, index) => {
       const card = document.createElement('div');
-      card.className = "polaroid cursor-pointer group";
+      card.className = "polaroid group";
+      card.draggable = true;
+      card.dataset.index = index;
       card.style.transform = `rotate(${mem.rotation || (index % 2 === 0 ? '-2deg' : '2deg')})`;
       
       const title = mem.title || "Sweet Memory";
@@ -196,38 +200,151 @@ class RakhiApp {
       const imgSrc = mem.image || "assets/images/photo1.jpg";
 
       card.innerHTML = `
-        <div class="relative overflow-hidden rounded-md bg-amber-50 aspect-[4/3]"
-             ondragover="event.preventDefault(); this.classList.add('ring-2', 'ring-rose-500')"
-             ondragleave="this.classList.remove('ring-2', 'ring-rose-500')"
+        <!-- Top Controls: Drag Grip & Delete Button -->
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-bold text-zinc-400 select-none flex items-center gap-1 cursor-grab" title="Drag to re-order position">
+            <span>⠿</span> Drag to Place
+          </span>
+          <button onclick="window.rakhiApp.deleteMemory(${index}, event)" class="w-6 h-6 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs flex items-center justify-center transition shadow-sm" title="Delete this memory">
+            ✕
+          </button>
+        </div>
+
+        <!-- Large Image Box with Drag & Drop replacement -->
+        <div class="relative overflow-hidden rounded-lg bg-amber-50 aspect-[4/3] w-full"
+             ondragover="event.preventDefault(); this.classList.add('ring-4', 'ring-rose-500')"
+             ondragleave="this.classList.remove('ring-4', 'ring-rose-500')"
              ondrop="window.rakhiApp.handleDropPhoto(${index}, event)">
           <img id="memory-img-${index}" src="${imgSrc}" alt="${title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='assets/images/photo1.jpg'">
           
           <!-- In-Place Photo Change Button -->
-          <div class="photo-upload-overlay absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white transition-opacity gap-1" onclick="window.rakhiApp.triggerPhotoUpload(${index}, event)">
-            <span class="text-xl">📷</span>
-            <span class="text-[10px] font-bold bg-white/20 px-2 py-0.5 rounded-full backdrop-blur-sm">Drag or Click Photo</span>
+          <div class="photo-upload-overlay absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white transition-opacity gap-1.5 cursor-pointer" onclick="window.rakhiApp.triggerPhotoUpload(${index}, event)">
+            <span class="text-2xl">📷</span>
+            <span class="text-xs font-bold bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm shadow">Drag Image Here or Click</span>
           </div>
 
-          <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
+          <div class="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-sm text-white text-[11px] font-semibold px-2.5 py-0.5 rounded-full">
             ${date}
           </div>
         </div>
-        <div class="mt-3 text-center">
-          <h4 class="font-heading font-bold text-zinc-800 text-sm sm:text-base mt-1">${title}</h4>
-          <p class="font-handwriting text-zinc-600 text-sm sm:text-base mt-0.5 leading-snug">${caption}</p>
+
+        <div class="mt-4 text-center cursor-pointer" onclick="window.rakhiApp.openPhotoModal(CONFIG.memories[${index}])">
+          <h4 class="font-heading font-bold text-zinc-900 text-base sm:text-lg">${title}</h4>
+          <p class="font-handwriting text-zinc-600 text-sm sm:text-base mt-1 leading-snug">${caption}</p>
         </div>
       `;
 
-      card.addEventListener('click', (e) => {
-        if (e.target.closest('.photo-upload-overlay')) return;
-        if (window.soundSystem && typeof window.soundSystem.playClick === 'function') {
-          window.soundSystem.playClick();
+      // Drag & Drop Card Reordering Listeners
+      card.addEventListener('dragstart', (e) => {
+        this.draggedCardIndex = index;
+        card.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+
+      card.addEventListener('dragend', () => {
+        card.classList.remove('dragging');
+        document.querySelectorAll('.polaroid').forEach(c => c.classList.remove('drag-over'));
+      });
+
+      card.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        card.classList.add('drag-over');
+      });
+
+      card.addEventListener('dragleave', () => {
+        card.classList.remove('drag-over');
+      });
+
+      card.addEventListener('drop', (e) => {
+        e.preventDefault();
+        card.classList.remove('drag-over');
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          // File was dropped onto the card
+          this.compressAndSavePhoto(index, e.dataTransfer.files[0]);
+        } else if (this.draggedCardIndex !== null && this.draggedCardIndex !== index) {
+          // Reorder the cards!
+          const movedItem = CONFIG.memories.splice(this.draggedCardIndex, 1)[0];
+          CONFIG.memories.splice(index, 0, movedItem);
+          this.draggedCardIndex = null;
+          this.renderMemories();
+          if (window.festiveEffects) window.festiveEffects.celebrate('medium');
         }
-        this.openPhotoModal(mem);
       });
 
       grid.appendChild(card);
     });
+  }
+
+  /* ─── ADD & DELETE MEMORIES ─── */
+  addNewMemory() {
+    let fileInput = document.getElementById('newMemoryFileInput');
+    if (!fileInput) {
+      fileInput = document.createElement('input');
+      fileInput.id = 'newMemoryFileInput';
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.style.display = 'none';
+      document.body.appendChild(fileInput);
+    }
+
+    fileInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (re) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxDim = 650;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressedData = canvas.toDataURL('image/jpeg', 0.72);
+
+          const newMemIndex = CONFIG.memories.length + 1;
+          CONFIG.memories.push({
+            title: `Pyari Yaadein #${newMemIndex} 💖`,
+            caption: "Ek aur anmol lamha jo dil ke paas rahega!",
+            date: "Special Memory",
+            image: compressedData,
+            rotation: newMemIndex % 2 === 0 ? "2deg" : "-2deg"
+          });
+
+          this.renderMemories();
+          if (window.festiveEffects) window.festiveEffects.celebrate('high');
+        };
+        img.src = re.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    fileInput.click();
+  }
+
+  deleteMemory(index, event) {
+    if (event) event.stopPropagation();
+    if (CONFIG.memories.length <= 1) {
+      alert("Kam se kam ek memory photo rehni chahiye! ❤️");
+      return;
+    }
+    if (confirm("Kya aap is memory ko delete karna chahte hain?")) {
+      CONFIG.memories.splice(index, 1);
+      this.renderMemories();
+    }
   }
 
   /* ─── RENDER 4 SIBLING TRAITS ─── */
@@ -269,7 +386,7 @@ class RakhiApp {
   handleDropPhoto(index, event) {
     event.preventDefault();
     if (event.currentTarget) {
-      event.currentTarget.classList.remove('ring-2', 'ring-rose-500');
+      event.currentTarget.classList.remove('ring-4', 'ring-rose-500');
     }
     const files = event.dataTransfer.files;
     if (files && files.length > 0) {
@@ -368,7 +485,6 @@ class RakhiApp {
       return;
     }
 
-    // Get brother's exact target WhatsApp number
     let phone = (CONFIG.whatsapp && CONFIG.whatsapp.number) ? CONFIG.whatsapp.number.replace(/[^0-9]/g, '') : '';
     if (!phone || phone === "919876543210") {
       const inputPhone = prompt("Enter Bhai's 10-digit WhatsApp Phone Number (to send request directly to him):", "");
