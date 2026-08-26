@@ -1,6 +1,6 @@
 /**
  * ===================================================================
- * 🌸 PYARI BEHENA - MAIN APP, REORDERABLE MEMORIES & SMART SHAGUN
+ * 🌸 PYARI BEHENA - MAIN APP, LARGE REORDERABLE MEMORIES & SHAGUN
  * ===================================================================
  */
 
@@ -181,7 +181,7 @@ class RakhiApp {
     }
   }
 
-  /* ─── LARGE & REORDERABLE POLAROID MEMORIES ─── */
+  /* ─── 📸 LARGE GRAND SHOWCASE POLAROID MEMORIES ─── */
   renderMemories() {
     const grid = document.getElementById('memoriesGrid');
     if (!grid || !Array.isArray(CONFIG.memories)) return;
@@ -192,7 +192,7 @@ class RakhiApp {
       card.className = "polaroid group";
       card.draggable = true;
       card.dataset.index = index;
-      card.style.transform = `rotate(${mem.rotation || (index % 2 === 0 ? '-2deg' : '2deg')})`;
+      card.style.transform = `rotate(${mem.rotation || (index % 2 === 0 ? '-1.5deg' : '1.5deg')})`;
       
       const title = mem.title || "Sweet Memory";
       const caption = mem.caption || "A moment to remember forever ❤️";
@@ -201,36 +201,36 @@ class RakhiApp {
 
       card.innerHTML = `
         <!-- Top Controls: Drag Grip & Delete Button -->
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-[11px] font-bold text-zinc-400 select-none flex items-center gap-1 cursor-grab" title="Drag to re-order position">
-            <span>⠿</span> Drag to Place
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-bold text-amber-800/70 select-none flex items-center gap-1.5 cursor-grab bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200" title="Drag to re-order position">
+            <span class="text-base">⠿</span> Drag to Move
           </span>
-          <button onclick="window.rakhiApp.deleteMemory(${index}, event)" class="w-6 h-6 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs flex items-center justify-center transition shadow-sm" title="Delete this memory">
+          <button onclick="window.rakhiApp.deleteMemory(${index}, event)" class="w-7 h-7 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 text-sm flex items-center justify-center transition shadow-sm font-bold" title="Delete this memory">
             ✕
           </button>
         </div>
 
-        <!-- Large Image Box with Drag & Drop replacement -->
-        <div class="relative overflow-hidden rounded-lg bg-amber-50 aspect-[4/3] w-full"
+        <!-- Extra Large Image Box -->
+        <div class="relative overflow-hidden rounded-xl bg-amber-50 aspect-[16/11] min-h-[260px] sm:min-h-[340px] md:min-h-[380px] w-full shadow-inner"
              ondragover="event.preventDefault(); this.classList.add('ring-4', 'ring-rose-500')"
              ondragleave="this.classList.remove('ring-4', 'ring-rose-500')"
              ondrop="window.rakhiApp.handleDropPhoto(${index}, event)">
-          <img id="memory-img-${index}" src="${imgSrc}" alt="${title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='assets/images/photo1.jpg'">
+          <img id="memory-img-${index}" src="${imgSrc}" alt="${title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='assets/images/photo1.jpg'">
           
           <!-- In-Place Photo Change Button -->
-          <div class="photo-upload-overlay absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white transition-opacity gap-1.5 cursor-pointer" onclick="window.rakhiApp.triggerPhotoUpload(${index}, event)">
-            <span class="text-2xl">📷</span>
-            <span class="text-xs font-bold bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm shadow">Drag Image Here or Click</span>
+          <div class="photo-upload-overlay absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white transition-opacity gap-2 cursor-pointer backdrop-blur-[2px]" onclick="window.rakhiApp.triggerPhotoUpload(${index}, event)">
+            <span class="text-3xl">📷</span>
+            <span class="text-xs sm:text-sm font-bold bg-white/20 px-4 py-1.5 rounded-full backdrop-blur-md shadow-lg">Drag Image Here or Click to Change</span>
           </div>
 
-          <div class="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-sm text-white text-[11px] font-semibold px-2.5 py-0.5 rounded-full">
+          <div class="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
             ${date}
           </div>
         </div>
 
-        <div class="mt-4 text-center cursor-pointer" onclick="window.rakhiApp.openPhotoModal(CONFIG.memories[${index}])">
-          <h4 class="font-heading font-bold text-zinc-900 text-base sm:text-lg">${title}</h4>
-          <p class="font-handwriting text-zinc-600 text-sm sm:text-base mt-1 leading-snug">${caption}</p>
+        <div class="mt-5 text-center cursor-pointer" onclick="window.rakhiApp.openPhotoModal(CONFIG.memories[${index}])">
+          <h4 class="font-heading font-bold text-zinc-900 text-lg sm:text-xl md:text-2xl">${title}</h4>
+          <p class="font-handwriting text-zinc-600 text-base sm:text-lg md:text-xl mt-1.5 leading-relaxed">${caption}</p>
         </div>
       `;
 
@@ -260,10 +260,8 @@ class RakhiApp {
         e.preventDefault();
         card.classList.remove('drag-over');
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-          // File was dropped onto the card
           this.compressAndSavePhoto(index, e.dataTransfer.files[0]);
         } else if (this.draggedCardIndex !== null && this.draggedCardIndex !== index) {
-          // Reorder the cards!
           const movedItem = CONFIG.memories.splice(this.draggedCardIndex, 1)[0];
           CONFIG.memories.splice(index, 0, movedItem);
           this.draggedCardIndex = null;
@@ -297,7 +295,7 @@ class RakhiApp {
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          const maxDim = 650;
+          const maxDim = 800;
           let w = img.width;
           let h = img.height;
           if (w > maxDim || h > maxDim) {
@@ -313,7 +311,7 @@ class RakhiApp {
           canvas.height = h;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, w, h);
-          const compressedData = canvas.toDataURL('image/jpeg', 0.72);
+          const compressedData = canvas.toDataURL('image/jpeg', 0.75);
 
           const newMemIndex = CONFIG.memories.length + 1;
           CONFIG.memories.push({
@@ -321,7 +319,7 @@ class RakhiApp {
             caption: "Ek aur anmol lamha jo dil ke paas rahega!",
             date: "Special Memory",
             image: compressedData,
-            rotation: newMemIndex % 2 === 0 ? "2deg" : "-2deg"
+            rotation: newMemIndex % 2 === 0 ? "1.5deg" : "-1.5deg"
           });
 
           this.renderMemories();
@@ -428,7 +426,7 @@ class RakhiApp {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const maxDim = 650;
+        const maxDim = 800;
         let w = img.width;
         let h = img.height;
         if (w > maxDim || h > maxDim) {
@@ -444,7 +442,7 @@ class RakhiApp {
         canvas.height = h;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, w, h);
-        const compressedData = canvas.toDataURL('image/jpeg', 0.72);
+        const compressedData = canvas.toDataURL('image/jpeg', 0.75);
 
         if (!CONFIG.memories[index]) {
           CONFIG.memories[index] = { title: `Memory #${index + 1}`, caption: "Special moment", date: "Yaadein" };
