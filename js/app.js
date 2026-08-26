@@ -1,6 +1,6 @@
 /**
  * ===================================================================
- * 🌸 PYARI BEHENA - MAIN APP, SMART SHAGUN & DRAG-AND-DROP SYSTEM
+ * 🌸 PYARI BEHENA - MAIN APP, SIBLING TRAITS & SMART SHAGUN SYSTEM
  * ===================================================================
  */
 
@@ -40,6 +40,7 @@ class RakhiApp {
     this.initAudioPlayer();
     this.renderLetter();
     this.renderMemories();
+    this.renderTraits();
     this.bindGlobalEvents();
   }
 
@@ -224,6 +225,41 @@ class RakhiApp {
     });
   }
 
+  /* ─── RENDER 4 SIBLING TRAITS (ANOKHI BONDING) ─── */
+  renderTraits() {
+    const grid = document.getElementById('traitsGrid');
+    if (!grid || !Array.isArray(CONFIG.traits)) return;
+    grid.innerHTML = '';
+
+    CONFIG.traits.forEach(trait => {
+      const card = document.createElement('div');
+      card.className = "glass-card p-5 sm:p-6 flex flex-col justify-between border border-amber-200/60 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group";
+      
+      const icon = trait.icon || "🌸";
+      const badge = trait.badge || "Bonding";
+      const title = trait.title || "Special Bond";
+      const desc = trait.description || "A sweet bond that lasts forever.";
+      const color = trait.color || "from-rose-500 to-amber-500";
+
+      card.innerHTML = `
+        <div class="space-y-3.5 text-center flex flex-col items-center">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr ${color} text-white flex items-center justify-center text-2xl shadow-md group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+            ${icon}
+          </div>
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200">
+              ${badge}
+            </span>
+            <h3 class="text-base font-bold text-zinc-800 mt-2 font-heading">${title}</h3>
+            <p class="text-xs text-zinc-600 mt-1.5 leading-relaxed">${desc}</p>
+          </div>
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+  }
+
   /* ─── DRAG & DROP PHOTO HANDLER ─── */
   handleDropPhoto(index, event) {
     event.preventDefault();
@@ -327,10 +363,8 @@ class RakhiApp {
       return;
     }
 
-    // Auto-Payable UPI Deep Link for Bhai:
     const upiPayUrl = `upi://pay?pa=${encodeURIComponent(sisterUpi)}&pn=${encodeURIComponent(sisterName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(note)}&cu=INR`;
 
-    // Show live QR Code for scanning
     const qrContainer = document.getElementById('sisterQrContainer');
     const qrImg = document.getElementById('sisterLiveQrImg');
     if (qrContainer && qrImg) {
@@ -340,7 +374,6 @@ class RakhiApp {
 
     if (window.festiveEffects) window.festiveEffects.celebrate('high');
 
-    // Build WhatsApp message for Bhai with 1-tap auto-pay link
     const whatsappMsg = `Hey ${brotherName}! 🌸\nMaine Raksha Bandhan special website se shagun request kiya hai:\n\n💸 *Amount: ₹${amount}*\n💌 *Note:* ${note}\n📲 *My UPI ID:* ${sisterUpi}\n\n👉 *Bhai Click Here to 1-Tap Pay directly via UPI:*\n${upiPayUrl}\n\nLove you Bhai! Jaldi approve karo! 😋❤️`;
 
     const encodedText = encodeURIComponent(whatsappMsg);
@@ -411,7 +444,7 @@ class RakhiApp {
     this.bindConfigData();
     this.renderLetter();
     this.renderMemories();
-    if (window.couponManager) window.couponManager.renderCoupons();
+    this.renderTraits();
 
     this.closePersonalizeModal();
 
@@ -438,6 +471,7 @@ class RakhiApp {
       letter: CONFIG.letter,
       memories: CONFIG.memories,
       whatsapp: CONFIG.whatsapp,
+      traits: CONFIG.traits,
       shagun: CONFIG.shagun
     };
 

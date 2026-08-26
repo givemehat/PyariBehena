@@ -4,9 +4,9 @@
  * ===================================================================
  * 
  * 💡 EASY CUSTOMIZATION:
- * 1. Edit this file directly OR use the "Personalize" button on the website!
- * 2. To change photos when cloning: simply drag & drop your photos into
- *    "assets/images/photo1.jpg", "photo2.jpg", "photo3.jpg", "photo4.jpg"!
+ * 1. Edit this file directly OR click "Personalize" on the website!
+ * 2. To change photos when cloning: simply replace photo1.jpg .. photo4.jpg
+ *    inside "assets/images/" folder!
  * ===================================================================
  */
 
@@ -64,7 +64,6 @@ const CONFIG = {
   },
 
   // ─── 6. MEMORIES (Photo Scrapbook) ───────────────────────────────
-  // Replace photo1.jpg .. photo4.jpg in "assets/images/" or drag & drop!
   memories: [
     {
       title: "Bachpan Ki Mastiyaan 👶",
@@ -96,55 +95,50 @@ const CONFIG = {
     }
   ],
 
-  // ─── 7. SIBLING PRIVILEGE PASSES & VOUCHERS ──────────────────────
-  whatsapp: {
-    number: "919876543210",               // Brother's phone number with Country Code (e.g. 919876543210)
-    messageTemplate: "Hey {BROTHER_NAME}! 🌸\nMaine Raksha Bandhan special website par ye voucher claim kiya hai:\n\n🎟️ *{VOUCHER_TITLE}*\n🔑 Code: *{VOUCHER_CODE}*\n\nAb jaldi se mera treat/pass redeem karo! 😋❤️"
-  },
-
-  coupons: [
+  // ─── 7. HAMARI ANOKHI BONDING (4 Things That Make Us Special) ─────
+  traits: [
     {
-      id: "coupon-1",
-      title: "1x Unlimited Swiggy / Food Treat 🍔",
-      description: "Jab bhi bhookh lage, order kar! Bill tera bhai pay karega (No questions asked)!",
-      code: "BHAI-KHILAYEGA-2026",
-      emoji: "🍕",
+      icon: "🤫",
+      badge: "Secret Keeper",
+      title: "Official Partner-in-Crime",
+      description: "Mere saare secrets aur kaand sirf tujhe pata hain, aur mummy ki daant se bachane ke liye tu hamesha ready rehti hai!",
       color: "from-rose-500 to-pink-600"
     },
     {
-      id: "coupon-2",
-      title: "1x Zero Argument / Bhai Maanega Pass 😇",
-      description: "Poore ek din ke liye tu jo bolegi, bhai bina kisi argue ke haan bolega!",
-      code: "QUEEN-FOR-A-DAY",
-      emoji: "👑",
+      icon: "🌸",
+      badge: "Mood Booster",
+      title: "Ghar Ki Sabse Badi Hasi",
+      description: "Chahe mera din kitna bhi stressful kyu na ho, teri ek nautanki aur hasi poora mood ek second me theek kar deti hai!",
       color: "from-amber-500 to-orange-600"
     },
     {
-      id: "coupon-3",
-      title: "1x Midnight Ice-Cream & Outing 🍨",
-      description: "Mood kharab ho ya accha, instant late-night ice cream ride bhai ke saath!",
-      code: "CHILL-WITH-BHAI",
-      emoji: "🚗",
+      icon: "🍕",
+      badge: "Midnight Foodie",
+      title: "Maggie & Craving Partner",
+      description: "Aadhi raat ko bina aawaaz kiye kitchen me Maggie banana aur mummy ke sone ke baad fridge raid marna!",
       color: "from-violet-500 to-purple-600"
     },
     {
-      id: "coupon-4",
-      title: "1x Assignment & Chore Helper ⚡",
-      description: "Koi bhi boring kaam ho, bhai will come to rescue and help you finish it!",
-      code: "TASK-SAVIOR-PRO",
-      emoji: "🧹",
+      icon: "🛡️",
+      badge: "My Strength",
+      title: "Forever Support System",
+      description: "Duniya ke samne chahe hum kitna bhi lad lein, par hum dono jante hain ki ek dusre ke liye hamesha khade rahenge.",
       color: "from-emerald-500 to-teal-600"
     }
   ],
 
   // ─── 8. INTERACTIVE SHAGUN LIFAFA (UPI Request & Gifting) ─────────
+  whatsapp: {
+    number: "919876543210"                // Brother's phone number with Country Code (e.g. 919876543210)
+  },
+
   shagun: {
     badge: "Rakhi Shagun",
     title: "🎁 Shagun Ka Digital Lifafa",
-    message: "Bhai se shagun maangne ka digital tarika! Amount choose karo aur request bhej do!",
-    brotherUpiId: "brother@upi",           // Brother's UPI ID (configured by Bhai)
-    giftCardCode: "RAKHI-2026-BHAI-TREAT", // Shopping gift card code
-    quickAmounts: [501, 1100, 2100, 5000], // Preset amounts for sister to pick
+    message: "Bhai se shagun maangne ka digital tarika! Amount choose karo aur direct request bhej do!",
+    brotherUpiId: "brother@upi",
+    giftCardCode: "RAKHI-2026-BHAI-TREAT",
+    quickAmounts: [501, 1100, 2100, 5000],
     defaultNote: "Shopping aur treat ke liye shagun bhejo bhaiya! 🛍️❤️"
   },
 
