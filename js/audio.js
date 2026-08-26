@@ -9,7 +9,7 @@ class SoundSystem {
     this.audioContext = null;
     this.bgAudio = null;
     this.isPlaying = false;
-    this.isMuted = false;
+    this.autoplayBlocked = false;
     this.initAudioContext();
   }
 
@@ -30,37 +30,14 @@ class SoundSystem {
     }
   }
 
-  // Built-in Synthesizer Sound Effects (100% reliable, zero external assets required!)
-  playBell() {
-    this.resumeContext();
-    if (!this.audioContext) return;
-    const ctx = this.audioContext;
-    const now = ctx.currentTime;
-
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(880, now); // A5 note
-    osc.frequency.exponentialRampToValueAtTime(440, now + 1.2);
-
-    gain.gain.setValueAtTime(0.3, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(now);
-    osc.stop(now + 1.2);
-  }
-
+  // Built-in Synthesizer Sound Effects (100% reliable, zero external dependencies)
   playSparkle() {
     this.resumeContext();
     if (!this.audioContext) return;
     const ctx = this.audioContext;
     const now = ctx.currentTime;
 
-    const frequencies = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // C major pentatonic
+    const frequencies = [523.25, 659.25, 783.99, 1046.50, 1318.51];
     frequencies.forEach((freq, idx) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -68,56 +45,14 @@ class SoundSystem {
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(freq, now + idx * 0.08);
 
-      gain.gain.setValueAtTime(0.15, now + idx * 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.4);
+      gain.gain.setValueAtTime(0.12, now + idx * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.35);
 
       osc.connect(gain);
       gain.connect(ctx.destination);
 
       osc.start(now + idx * 0.08);
-      osc.stop(now + idx * 0.08 + 0.4);
-    });
-  }
-
-  playAarti() {
-    this.resumeContext();
-    if (!this.audioContext) return;
-    const ctx = this.audioContext;
-    const now = ctx.currentTime;
-
-    // Harmonic warm resonant bell
-    [587.33, 880, 1174.66].forEach((f, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(f, now);
-      gain.gain.setValueAtTime(0.12 / (i + 1), now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 1.8);
-    });
-  }
-
-  playCheer() {
-    this.resumeContext();
-    if (!this.audioContext) return;
-    const ctx = this.audioContext;
-    const now = ctx.currentTime;
-
-    const notes = [440, 554.37, 659.25, 880, 1108.73];
-    notes.forEach((freq, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, now + i * 0.06);
-      gain.gain.setValueAtTime(0.2, now + i * 0.06);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.6);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now + i * 0.06);
-      osc.stop(now + i * 0.06 + 0.6);
+      osc.stop(now + idx * 0.08 + 0.35);
     });
   }
 
@@ -140,11 +75,49 @@ class SoundSystem {
   }
 
   // Background Music Controller
-  initBackgroundMusic(customUrl) {
+  initBackgroundMusic(customUrl, volume = 0.5) {
     if (!customUrl) return;
-    this.bgAudio = new Audio(customUrl);
-    this.bgAudio.loop = true;
-    this.bgAudio.volume = 0.45;
+    try {
+      this.bgAudio = new Audio(customUrl);
+      this.bgAudio.loop = true;
+      this.bgAudio.volume = Math.min(Math.max(volume, 0.0), 1.0);
+
+      // Attempt subtle background playback
+      const playPromise = this.bgAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          this.isPlaying = true;
+          this.updateAudioButtonUI(true);
+        }).catch(error => {
+          // Autoplay blocked by browser policy (expected on modern mobile & desktop browsers)
+          this.autoplayBlocked = true;
+          this.updateAudioButtonUI(false);
+          this.showAutoplayPrompt();
+        });
+      }
+    } catch (e) {
+      console.warn("Audio init error:", e);
+    }
+  }
+
+  showAutoplayPrompt() {
+    const promptEl = document.getElementById('musicPromptToast');
+    if (promptEl) {
+      promptEl.classList.remove('hidden');
+      setTimeout(() => {
+        promptEl.classList.add('opacity-100');
+      }, 100);
+    }
+  }
+
+  hideAutoplayPrompt() {
+    const promptEl = document.getElementById('musicPromptToast');
+    if (promptEl) {
+      promptEl.classList.add('opacity-0');
+      setTimeout(() => {
+        promptEl.classList.add('hidden');
+      }, 300);
+    }
   }
 
   playBackgroundMusic() {
@@ -153,8 +126,9 @@ class SoundSystem {
     this.bgAudio.play().then(() => {
       this.isPlaying = true;
       this.updateAudioButtonUI(true);
+      this.hideAutoplayPrompt();
     }).catch(err => {
-      console.log("Audio waiting for user gesture:", err);
+      console.log("Audio waiting for interaction:", err);
     });
     return true;
   }
@@ -170,12 +144,16 @@ class SoundSystem {
   updateAudioButtonUI(playing) {
     const audioToggleBtn = document.getElementById('floatingAudioToggle');
     const audioIcon = document.getElementById('audioStatusIcon');
+    const audioSubtext = document.getElementById('audioButtonSubtext');
+
     if (playing) {
       if (audioIcon) audioIcon.innerHTML = `<span class="animate-pulse text-rose-600">🎵</span>`;
       if (audioToggleBtn) audioToggleBtn.classList.add('border-rose-400', 'bg-rose-50');
+      if (audioSubtext) audioSubtext.innerText = "Playing • Tap to Mute";
     } else {
       if (audioIcon) audioIcon.innerHTML = `<span>🔇</span>`;
       if (audioToggleBtn) audioToggleBtn.classList.remove('border-rose-400', 'bg-rose-50');
+      if (audioSubtext) audioSubtext.innerText = "Muted • Tap to Play";
     }
   }
 

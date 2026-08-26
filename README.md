@@ -1,79 +1,91 @@
 # 🌸 Pyari Behena (प्यारी बहना) - Raksha Bandhan Special Gift Website 🪔
 
-> **A heartfelt, elegant, and customizable digital Raksha Bandhan surprise website for your sister.**  
-> *Crafted for brothers who want to send a genuine, emotional, and loving surprise to their sisters!*
+> **A heartfelt, elegant, and 100% customizable digital Raksha Bandhan surprise website for your sister.**  
+> *Crafted for brothers who want to send a genuine, emotional, and loving surprise to their sisters on Raksha Bandhan.*
 
 ---
 
-## 🌐 Live Demo & Repository
+## 🌟 Live Demo & Preview
 
-- 🌟 **Live Website (GitHub Pages)**: [https://givemehat.github.io/PyariBehena/](https://givemehat.github.io/PyariBehena/)
-- 📦 **GitHub Repository**: [https://github.com/givemehat/PyariBehena](https://github.com/givemehat/PyariBehena)
-- 📖 **Complete Step-by-Step Guide**: [DEPLOYMENT_AND_CUSTOMIZATION_GUIDE.md](DEPLOYMENT_AND_CUSTOMIZATION_GUIDE.md)
+- 🌐 **Live Website**: [https://givemehat.github.io/PyariBehena/](https://givemehat.github.io/PyariBehena/)
+- 🛠️ **No-Code Form Generator**: [Open `generator.html`](generator.html)
+- 📖 **Full Customization Guide**: [DEPLOYMENT_AND_CUSTOMIZATION_GUIDE.md](DEPLOYMENT_AND_CUSTOMIZATION_GUIDE.md)
 
 ---
 
 ## ✨ Features
 
 - 💌 **"Ek Pyara Sa Sandesh" (Bhai Ki Chitthi)**:
-  - Heartfelt parchment letter with wax seal, sibling memories, and 4 lifelong brotherly promises.
+  - Heartfelt parchment letter with wax seal, emotional childhood memories, and 4 lifelong brotherly promises.
 - 📸 **Nostalgic Memory Lane Scrapbook**:
-  - Vintage polaroid photo gallery with tilt hover, sticky notes, and interactive lightbox zoom.
+  - Vintage polaroid photo cards with tilt animations, lazy-loaded images, and click-to-zoom modal.
 - 🎟️ **Sibling Privilege Passes (Vouchers)**:
-  - Tap-to-reveal digital coupons (e.g., *Unlimited Swiggy Treat*, *Zero Argument Pass*, *Late-Night Ice Cream Ride*) with instant **1-Tap WhatsApp Claim** button.
+  - Tap-to-reveal digital coupons (e.g. *Unlimited Swiggy Treat*, *Zero Argument Pass*, *Late-Night Ice Cream Ride*) with instant **1-Tap WhatsApp Claim** button using your phone number!
 - 🎁 **Digital Shagun Lifafa**:
-  - Amazon/Shopping voucher code + UPI QR code for direct gift shagun.
+  - Shopping gift voucher code + Direct UPI QR code for Rakhi shagun.
 - 🎵 **Built-in Sibling Soundtrack**:
-  - Lata Mangeshkar's iconic *"Phoolon Ka Taaron Ka"* background soundtrack with floating player.
+  - Lata Mangeshkar's iconic *"Phoolon Ka Taaron Ka"* background soundtrack with autoplay fallback detection & floating controls.
 - 🌸 **Canvas Particle Effects**:
-  - Falling Marigold & Rose flower petals, mouse sparkle trails, and fireworks confetti.
+  - Falling Marigold & Rose petals and mouse sparkle trails with `prefers-reduced-motion` accessibility support.
 
 ---
 
-## 🚀 How to Customize in 2 Minutes (Sirf 2 Minute Me Edit Karein)
+## 🚀 How to Personalize in 2 Minutes
 
-Aapko HTML ya CSS seekhne ki koi zaroorat nahi hai! Saari details ek hi file me hain: **`config.js`**.
+You do NOT need to touch HTML or CSS! There are two super easy ways to customize:
 
-### Step 1: Clone or Download the Repository
-```bash
-git clone https://github.com/givemehat/PyariBehena.git
-cd PyariBehena
+### 🌟 Method 1: Use the No-Code Form Generator (Recommended)
+1. Double-click **`generator.html`** in your project folder to open it in Chrome/Safari.
+2. Fill in your names, message, WhatsApp number, photos, and UPI ID.
+3. Click **"⬇️ Download config.js"**.
+4. Replace the existing `config.js` file in your folder with the downloaded file. That's it! 🎉
+
+---
+
+### 💻 Method 2: Edit `config.js` Directly
+Open `config.js` in VS Code or Notepad and customize:
+```javascript
+const CONFIG = {
+  sisterName: "Gudiya",                    // Sister's name
+  brotherName: "Tera Bhai",               // Your name / signature
+  whatsapp: {
+    number: "919876543210"                // Your WhatsApp number (with Country Code)
+  },
+  letter: {
+    title: "Pyari Behena ke Naam, Bhai Ki Chitthi 💌",
+    paragraphs: [ /* your message */ ],
+    promises: [ /* your promises */ ]
+  },
+  memories: [ /* your photos & memories */ ],
+  shagun: {
+    upiId: "brother@upi",
+    giftCardCode: "RAKHI-2026-BHAI-TREAT"
+  }
+};
 ```
 
-### Step 2: Edit `config.js`
-Open `config.js` in VS Code or Notepad and change:
-- **`sisterName`**: Apni behen ka naam daalein (e.g., `"Priya"`, `"Gudiya"`)
-- **`brotherName`**: Apna naam daalein (e.g., `"Aman"`, `"Tera Bhai"`)
-- **`letter`**: Apne dil ki baat aur sandesh likhein.
-- **`memories`**: Apni photos ke links ya local files daalein (`image: "assets/images/photo1.jpg"`).
-- **`coupons`**: Apne customized treats aur passes set karein.
-- **`shagun`**: Apna UPI ID ya Gift Voucher code update karein.
+---
 
-### Step 3: Preview Locally
-Double click `index.html` to open directly in any browser (Chrome, Safari, Edge, Firefox)!
+## 🌐 1-Click Free Deployment (GitHub Pages)
+
+1. **Fork or Push** this repository to your GitHub account.
+2. Go to your repository **Settings** -> **Pages**.
+3. Under **Branch**, select `main` and root `/`, then click **Save**.
+4. Within 1 minute, your website will be live at:  
+   👉 `https://<YOUR_USERNAME>.github.io/PyariBehena/`
 
 ---
 
-## 🌐 Free 1-Click Deployment (Bina Kisi Kharch Ke Live Karein)
+## ✅ Customizer Checklist
 
-### Option A: GitHub Pages (Free & Recommended)
-1. Apne GitHub account par nayi repository banayein: `pyari-behena`.
-2. Saari files push karein:
-   ```bash
-   git add .
-   git commit -m "Happy Raksha Bandhan"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/pyari-behena.git
-   git push -u origin main
-   ```
-3. GitHub Repo me jayein -> **Settings** -> **Pages**.
-4. **Branch** me `main` select karein aur folder me `/ (root)` choose karke **Save** par click karein.
-5. 1 minute me aapki website live ho jayegi: `https://YOUR_USERNAME.github.io/pyari-behena/` 🎉
-
-### Option B: Vercel / Netlify (Drag & Drop)
-1. [vercel.com](https://vercel.com) ya [netlify.com](https://netlify.com) par jayein.
-2. Apne project folder ko Drag & Drop karein.
-3. Instant customized live link copy karke apni behen ko WhatsApp/Instagram par bhein! 💌
+- [ ] Replaced sister's name and brother's name in `config.js` (or via `generator.html`).
+- [ ] Updated the heartfelt letter with your own memories.
+- [ ] Added your favorite photos into `assets/images/` or pasted image URLs.
+- [ ] Added your WhatsApp number (with country code) for direct voucher claims.
+- [ ] Updated UPI ID / Gift Card code in Shagun section.
+- [ ] Tested locally by double-clicking `index.html`.
+- [ ] Pushed to GitHub and enabled GitHub Pages.
+- [ ] Sent the live link to your sister on WhatsApp! ❤️
 
 ---
 
@@ -81,23 +93,25 @@ Double click `index.html` to open directly in any browser (Chrome, Safari, Edge,
 
 ```
 PyariBehena/
-├── index.html        # Main festive website
-├── config.js         # Single master file for all text, photos & gifts
+├── index.html        # Main festive single-page website
+├── generator.html    # Local No-Code Form to generate config.js easily
+├── config.js         # Single master configuration file
 ├── css/
-│   ├── style.css     # Festive aesthetics, glassmorphism, polaroids
-│   └── animations.css# Petals, rakhi glow & subtle animations
+│   ├── style.css     # Festive styling, glassmorphism, polaroids
+│   └── animations.css# Petals & glow animations
 ├── js/
-│   ├── app.js        # Dynamic data binding & modals
-│   ├── coupons.js    # Privilege passes & WhatsApp claims
-│   ├── effects.js    # Canvas falling petals & sparkles
-│   └── audio.js      # Web Audio API & soundtrack player
+│   ├── app.js        # Dynamic data binding & photo modals
+│   ├── coupons.js    # Privilege passes & WhatsApp claim system
+│   ├── effects.js    # Canvas falling petals with reduced-motion support
+│   └── audio.js      # Soundtrack player with autoplay fallback handling
 ├── assets/
-│   └── audio/        # Phoolon Ka Taaron Ka background soundtrack
-├── DEPLOYMENT_AND_CUSTOMIZATION_GUIDE.md # Detailed user guide
-└── README.md         # Tutorial & setup guide
+│   └── audio/        # Background audio track
+├── DEPLOYMENT_AND_CUSTOMIZATION_GUIDE.md # Step-by-step user manual
+├── LICENSE           # Open-source MIT License
+└── README.md         # Documentation
 ```
 
 ---
 
 ## 📜 License
-This project is open-source under the [MIT License](LICENSE). Feel free to star ⭐, fork, and share!
+This project is open-source under the [MIT License](LICENSE). Feel free to star ⭐, fork, and share with your loved ones!

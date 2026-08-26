@@ -10,10 +10,15 @@ class FestiveEffects {
     this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
     this.petals = [];
     this.sparkles = [];
-    this.numberOfPetals = window.innerWidth < 768 ? 25 : 45;
-    this.mouse = { x: -1000, y: -1000, moved: false };
+    
+    // Check user preference for reduced motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.reducedMotion = prefersReducedMotion;
+    
+    this.numberOfPetals = this.reducedMotion ? 0 : (window.innerWidth < 768 ? 20 : 38);
+    this.mouse = { x: -1000, y: -1000 };
 
-    if (this.canvas && this.ctx) {
+    if (this.canvas && this.ctx && !this.reducedMotion) {
       this.resize();
       this.initPetals();
       this.setupListeners();
@@ -22,6 +27,7 @@ class FestiveEffects {
   }
 
   resize() {
+    if (!this.canvas) return;
     this.width = this.canvas.width = window.innerWidth;
     this.height = this.canvas.height = window.innerHeight;
   }
@@ -29,16 +35,31 @@ class FestiveEffects {
   setupListeners() {
     window.addEventListener('resize', () => this.resize());
     
+    // Listen for changes in user's reduced-motion preference
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+      this.reducedMotion = e.matches;
+      if (this.reducedMotion) {
+        this.petals = [];
+        this.sparkles = [];
+        if (this.ctx) this.ctx.clearRect(0, 0, this.width, this.height);
+      } else {
+        this.numberOfPetals = window.innerWidth < 768 ? 20 : 38;
+        this.initPetals();
+        this.animate();
+      }
+    });
+
     // Sparkle trail on mouse move
     window.addEventListener('mousemove', (e) => {
+      if (this.reducedMotion) return;
       this.mouse.x = e.clientX;
       this.mouse.y = e.clientY;
-      this.mouse.moved = true;
       this.addSparkle(e.clientX, e.clientY);
     });
 
     // Touch sparkle
     window.addEventListener('touchmove', (e) => {
+      if (this.reducedMotion) return;
       if (e.touches.length > 0) {
         const t = e.touches[0];
         this.addSparkle(t.clientX, t.clientY);
@@ -61,14 +82,14 @@ class FestiveEffects {
       this.petals.push({
         x: Math.random() * this.width,
         y: Math.random() * this.height - this.height,
-        size: Math.random() * 12 + 8,
+        size: Math.random() * 11 + 7,
         color: petalColors[Math.floor(Math.random() * petalColors.length)],
-        speedY: Math.random() * 1.5 + 0.8,
-        speedX: Math.random() * 1 - 0.5,
+        speedY: Math.random() * 1.2 + 0.6,
+        speedX: Math.random() * 0.8 - 0.4,
         rotation: Math.random() * 360,
-        rotationSpeed: Math.random() * 2 - 1,
-        oscillationSpeed: Math.random() * 0.03 + 0.01,
-        oscillationDistance: Math.random() * 30 + 15,
+        rotationSpeed: Math.random() * 1.8 - 0.9,
+        oscillationSpeed: Math.random() * 0.025 + 0.01,
+        oscillationDistance: Math.random() * 25 + 10,
         baseX: Math.random() * this.width,
         time: Math.random() * 100,
         isRound: Math.random() > 0.4
@@ -80,14 +101,14 @@ class FestiveEffects {
     if (Math.random() > 0.4) return;
     const colors = ['#f59e0b', '#fbbf24', '#fef08a', '#fda4af', '#ffffff'];
     this.sparkles.push({
-      x: x + (Math.random() * 16 - 8),
-      y: y + (Math.random() * 16 - 8),
-      size: Math.random() * 4 + 2,
+      x: x + (Math.random() * 14 - 7),
+      y: y + (Math.random() * 14 - 7),
+      size: Math.random() * 3.5 + 1.5,
       color: colors[Math.floor(Math.random() * colors.length)],
       alpha: 1,
-      decay: Math.random() * 0.03 + 0.02,
-      vy: Math.random() * -1.5 - 0.5,
-      vx: (Math.random() - 0.5) * 1.5
+      decay: Math.random() * 0.03 + 0.025,
+      vy: Math.random() * -1.2 - 0.4,
+      vx: (Math.random() - 0.5) * 1.2
     });
   }
 
@@ -96,15 +117,12 @@ class FestiveEffects {
     ctx.save();
     ctx.translate(p.x, p.y);
     ctx.rotate((p.rotation * Math.PI) / 180);
-
     ctx.fillStyle = p.color;
     ctx.beginPath();
 
     if (p.isRound) {
-      // Marigold / Genda flower petal shape
       ctx.ellipse(0, 0, p.size * 0.6, p.size, 0, 0, Math.PI * 2);
     } else {
-      // Rose petal curved shape
       ctx.moveTo(0, -p.size);
       ctx.bezierCurveTo(p.size * 0.8, -p.size * 0.5, p.size * 0.8, p.size * 0.5, 0, p.size);
       ctx.bezierCurveTo(-p.size * 0.8, p.size * 0.5, -p.size * 0.8, -p.size * 0.5, 0, -p.size);
@@ -120,7 +138,6 @@ class FestiveEffects {
     ctx.globalAlpha = s.alpha;
     ctx.fillStyle = s.color;
 
-    // Draw 4-point golden star
     const x = s.x, y = s.y, r = s.size;
     ctx.beginPath();
     ctx.moveTo(x, y - r * 1.5);
@@ -133,14 +150,15 @@ class FestiveEffects {
     ctx.lineTo(x - r * 0.3, y - r * 0.3);
     ctx.closePath();
     ctx.fill();
-
     ctx.restore();
   }
 
   animate() {
+    if (this.reducedMotion) return;
+
     this.ctx.clearRect(0, 0, this.width, this.height);
 
-    // Update and draw petals
+    // Update & draw petals
     for (let i = 0; i < this.petals.length; i++) {
       const p = this.petals[i];
       p.time += p.oscillationSpeed;
@@ -148,16 +166,15 @@ class FestiveEffects {
       p.x = p.baseX + Math.sin(p.time) * p.oscillationDistance;
       p.rotation += p.rotationSpeed;
 
-      // Wrap around screen
-      if (p.y > this.height + 30) {
-        p.y = -30;
+      if (p.y > this.height + 25) {
+        p.y = -25;
         p.baseX = Math.random() * this.width;
       }
 
       this.drawPetal(p);
     }
 
-    // Update and draw cursor sparkles
+    // Update & draw sparkles
     for (let i = this.sparkles.length - 1; i >= 0; i--) {
       const s = this.sparkles[i];
       s.x += s.vx;
@@ -174,35 +191,16 @@ class FestiveEffects {
     requestAnimationFrame(() => this.animate());
   }
 
-  // Celebration Fireworks / Confetti Blast
+  // Celebration Fireworks / Confetti
   celebrate(intensity = 'medium') {
     if (typeof confetti === 'function') {
-      const count = intensity === 'high' ? 120 : 60;
+      const count = intensity === 'high' ? 100 : 50;
       confetti({
         particleCount: count,
-        spread: 80,
-        origin: { y: 0.6 },
+        spread: 75,
+        origin: { y: 0.65 },
         colors: ['#f59e0b', '#be123c', '#fbbf24', '#f43f5e', '#ffffff']
       });
-
-      if (intensity === 'high') {
-        setTimeout(() => {
-          confetti({
-            particleCount: 50,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0 },
-            colors: ['#f59e0b', '#fbbf24', '#be123c']
-          });
-          confetti({
-            particleCount: 50,
-            angle: 120,
-            spread: 55,
-            origin: { x: 1 },
-            colors: ['#f59e0b', '#fbbf24', '#be123c']
-          });
-        }, 250);
-      }
     }
   }
 }

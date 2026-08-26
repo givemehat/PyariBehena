@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pyari Behena - No-Code Config Generator 🌸</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Rozha+One&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .font-decorative { font-family: 'Rozha One', serif; }
+  </style>
+</head>
+<body class="bg-amber-50/40 min-h-screen text-zinc-800 pb-16">
+
+  <!-- Header -->
+  <header class="bg-rose-900 text-white py-6 px-4 shadow-lg">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🌸</span>
+          <h1 class="font-decorative text-xl sm:text-2xl tracking-wide">Pyari Behena - Config Generator</h1>
+        </div>
+        <p class="text-rose-200 text-xs sm:text-sm mt-1">
+          Form fill karein aur 1-click me apna personalized <code>config.js</code> download karein! ✨
+        </p>
+      </div>
+      <a href="index.html" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs rounded-xl shadow transition">
+        👁️ Preview Website
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Form Container -->
+  <main class="max-w-4xl mx-auto mt-8 px-4">
+    <form id="configForm" onsubmit="event.preventDefault(); generateConfig();" class="space-y-6">
+      
+      <!-- 1. Sibling Names -->
+      <section class="bg-white rounded-2xl p-6 shadow-sm border border-amber-200">
+        <h2 class="text-base font-bold text-rose-900 flex items-center gap-2 border-b pb-2 mb-4">
+          <span>👑</span> Sibling & Occasion Details
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">Sister's Name (Behen ka Naam) *</label>
+            <input type="text" id="sisterName" required value="Gudiya" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">Sister's Nickname</label>
+            <input type="text" id="sisterNickname" value="Meri Nautanki Behen" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">Brother's Name / Signature (Aapka Naam) *</label>
+            <input type="text" id="brotherName" required value="Tera Bhai" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">Festival Year / Occasion</label>
+            <input type="text" id="festivalYear" value="2026" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">Top Badge Text</label>
+            <input type="text" id="relationBadge" value="World's Best Sister Ever 👑" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. WhatsApp Number & Claim Template -->
+      <section class="bg-white rounded-2xl p-6 shadow-sm border border-amber-200">
+        <h2 class="text-base font-bold text-rose-900 flex items-center gap-2 border-b pb-2 mb-4">
+          <span>💬</span> WhatsApp Voucher Settings
+        </h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">
+              Brother's WhatsApp Number (With Country Code, e.g. 919876543210)
+            </label>
+            <input type="text" id="whatsappNumber" value="919876543210" placeholder="919876543210" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
+            <p class="text-[11px] text-zinc-400 mt-1">Leave empty if you don't want to specify a fixed number.</p>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">
+              WhatsApp Message Template (Use {BROTHER_NAME}, {VOUCHER_TITLE}, {VOUCHER_CODE})
+            </label>
+            <textarea id="whatsappTemplate" rows="3" class="w-full p-2.5 rounded-xl border border-zinc-300 text-xs sm:text-sm focus:border-rose-500 focus:outline-none">Hey {BROTHER_NAME}! 🌸&#10;Maine Raksha Bandhan special website par ye voucher claim kiya hai:&#10;&#10;🎟️ *{VOUCHER_TITLE}*&#10;🔑 Code: *{VOUCHER_CODE}*&#10;&#10;Ab jaldi se mera treat/pass redeem karo! 😋❤️</textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Emotional Letter -->
+      <section class="bg-white rounded-2xl p-6 shadow-sm border border-amber-200">
+        <h2 class="text-base font-bold text-rose-900 flex items-center gap-2 border-b pb-2 mb-4">
+          <span>💌</span> Bhai Ki Chitthi (The Letter)
+        </h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">Letter Title</label>
+            <input type="text" id="letterTitle" value="Pyari Behena ke Naam, Bhai Ki Chitthi 💌" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">
+              Letter Paragraphs (Separate each paragraph with a blank line)
+            </label>
+            <textarea id="letterParagraphs" rows="6" class="w-full p-2.5 rounded-xl border border-zinc-300 text-xs sm:text-sm focus:border-rose-500 focus:outline-none">Meri pyari behen,
+
+Mujhe aaj bhi yaad hai wo din jab hum TV ke remote ke liye lada karte the, bina wajah ek dusre ko chidhate the, aur jab bhi mummy gussa hoti thi toh hum dono ek dusre ko bachate the.
+
+Aaj jab hum thode bade ho gaye hain aur shayad main is baar tere samne baith kar Rakhi nahi bandhwa pa raha, par yakeen maan—tera bhai hamesha dil se tere sabse kareeb hai.
+
+Tu sirf meri behen nahi hai, meri sabse achhi dost hai. Teri ek hasi poore ghar ko roshan kar deti hai.
+
+Is Raksha Bandhan par main tujhse wada karta hu ki chahe jo ho jaye, main hamesha tere har sapne me tere saath khada rahunga. Hamesha aise hi muskurati reh!</textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">
+              Bhai ke 4 Pakke Wade (Promises - 1 per line)
+            </label>
+            <textarea id="letterPromises" rows="4" class="w-full p-2.5 rounded-xl border border-zinc-300 text-xs sm:text-sm focus:border-rose-500 focus:outline-none">🛡️ Hamesha tera khayal rakhunga aur tere har faisle me tera saath dunga
+🍕 Teri aadhi raat ki cravings aur food treats hamesha bhai sponsor karega
+🤐 Tere saare secrets aur gossips mummy-papa se hamesha safe rahenge
+📞 Kabhi bhi udaas ho, tera bhai sirf 1 call ki doori par hai</textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Photos / Memories -->
+      <section class="bg-white rounded-2xl p-6 shadow-sm border border-amber-200">
+        <div class="flex items-center justify-between border-b pb-2 mb-4">
+          <h2 class="text-base font-bold text-rose-900 flex items-center gap-2">
+            <span>📸</span> Memories & Photo Scrapbook
+          </h2>
+          <button type="button" onclick="addMemoryRow()" class="text-xs px-3 py-1 bg-rose-50 text-rose-700 font-semibold rounded-lg border border-rose-200 hover:bg-rose-100">
+            + Add Photo
+          </button>
+        </div>
+
+        <div id="memoriesContainer" class="space-y-4">
+          <!-- Memory Row 1 -->
+          <div class="memory-row p-4 bg-zinc-50 rounded-xl border border-zinc-200 space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Photo Title</label>
+                <input type="text" class="mem-title w-full p-2 rounded-lg border text-xs" value="Bachpan Ki Mastiyaan 👶">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Date / Tag</label>
+                <input type="text" class="mem-date w-full p-2 rounded-lg border text-xs" value="Sweet Old Days">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Image URL or Local Path</label>
+                <input type="text" class="mem-image w-full p-2 rounded-lg border text-xs" value="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Photo Caption</label>
+              <input type="text" class="mem-caption w-full p-2 rounded-lg border text-xs" value="Jab bina kisi wajah hum dono poore ghar me shor machate the!">
+            </div>
+          </div>
+
+          <!-- Memory Row 2 -->
+          <div class="memory-row p-4 bg-zinc-50 rounded-xl border border-zinc-200 space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Photo Title</label>
+                <input type="text" class="mem-title w-full p-2 rounded-lg border text-xs" value="Tom & Jerry Wali Ladai 📺">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Date / Tag</label>
+                <input type="text" class="mem-date w-full p-2 rounded-lg border text-xs" value="Classic Sibling Fights">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Image URL or Local Path</label>
+                <input type="text" class="mem-image w-full p-2 rounded-lg border text-xs" value="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Photo Caption</label>
+              <input type="text" class="mem-caption w-full p-2 rounded-lg border text-xs" value="Cartoon Network vs Saas Bahu! Par 5 minute baad wapas best friends.">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Shagun & UPI -->
+      <section class="bg-white rounded-2xl p-6 shadow-sm border border-amber-200">
+        <h2 class="text-base font-bold text-rose-900 flex items-center gap-2 border-b pb-2 mb-4">
+          <span>🎁</span> Shagun Ka Lifafa (Gifts & UPI)
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">Shopping Voucher / Gift Code</label>
+            <input type="text" id="giftCardCode" value="RAKHI-2026-BHAI-TREAT" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">Brother's UPI ID (for Shagun QR)</label>
+            <input type="text" id="upiId" value="brother@upi" placeholder="yourname@upi" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-zinc-600 mb-1">Shagun Message</label>
+            <input type="text" id="shagunMessage" value="Yeh shagun tumhari manpasand shopping aur treats ke liye hai. Love you always!" class="w-full p-2.5 rounded-xl border border-zinc-300 text-sm focus:border-rose-500 focus:outline-none">
+          </div>
+        </div>
+      </section>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center gap-4 pt-2">
+        <button type="button" onclick="generateAndDownload()" class="w-full sm:w-1/2 py-3.5 px-6 bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+          <span>⬇️</span> Download config.js
+        </button>
+        <button type="button" onclick="copyConfigToClipboard()" class="w-full sm:w-1/2 py-3.5 px-6 bg-zinc-900 hover:bg-black text-white font-bold text-sm rounded-xl shadow transition flex items-center justify-center gap-2">
+          <span>📋</span> Copy Code to Clipboard
+        </button>
+      </div>
+    </form>
+
+    <!-- Generated Code Output Modal / Preview -->
+    <div class="mt-8 bg-zinc-900 text-zinc-100 rounded-2xl p-6 shadow-xl border border-zinc-800">
+      <div class="flex items-center justify-between border-b border-zinc-800 pb-3 mb-3">
+        <span class="text-xs font-mono text-zinc-400">📄 config.js Preview</span>
+        <button onclick="copyConfigToClipboard()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold underline">
+          Copy All
+        </button>
+      </div>
+      <pre id="codePreview" class="text-xs font-mono overflow-x-auto max-h-96 text-amber-200 leading-relaxed"></pre>
+    </div>
+  </main>
+
+  <script>
+    function getFormData() {
+      const sisterName = document.getElementById('sisterName').value.trim() || "Gudiya";
+      const sisterNickname = document.getElementById('sisterNickname').value.trim() || "Meri Nautanki Behen";
+      const brotherName = document.getElementById('brotherName').value.trim() || "Tera Bhai";
+      const festivalYear = document.getElementById('festivalYear').value.trim() || "2026";
+      const relationBadge = document.getElementById('relationBadge').value.trim() || "World's Best Sister Ever 👑";
+
+      const whatsappNumber = document.getElementById('whatsappNumber').value.trim() || "919876543210";
+      const whatsappTemplate = document.getElementById('whatsappTemplate').value.trim();
+
+      const letterTitle = document.getElementById('letterTitle').value.trim() || "Pyari Behena ke Naam, Bhai Ki Chitthi 💌";
+      const letterParagraphs = document.getElementById('letterParagraphs').value.split('\n\n').map(p => p.trim()).filter(Boolean);
+      const letterPromises = document.getElementById('letterPromises').value.split('\n').map(p => p.trim()).filter(Boolean);
+
+      const giftCardCode = document.getElementById('giftCardCode').value.trim() || "RAKHI-2026-BHAI-TREAT";
+      const upiId = document.getElementById('upiId').value.trim() || "brother@upi";
+      const shagunMessage = document.getElementById('shagunMessage').value.trim();
+
+      // Collect memories
+      const memoryRows = document.querySelectorAll('.memory-row');
+      const memories = [];
+      memoryRows.forEach((row, i) => {
+        const title = row.querySelector('.mem-title').value.trim() || `Memory #${i+1}`;
+        const date = row.querySelector('.mem-date').value.trim() || "Sweet Days";
+        const image = row.querySelector('.mem-image').value.trim() || "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80";
+        const caption = row.querySelector('.mem-caption').value.trim() || "A moment to remember";
+        memories.push({ title, caption, date, image, rotation: (i % 2 === 0 ? "-2deg" : "2deg") });
+      });
+
+      return {
+        sisterName,
+        sisterNickname,
+        brotherName,
+        festivalYear,
+        relationBadge,
+        meta: {
+          pageTitle: `Happy Raksha Bandhan, ${sisterName}! 🌸`,
+          description: `A special digital Raksha Bandhan surprise from ${brotherName} with lots of love, memories, and treat vouchers!`,
+          previewImage: memories[0] ? memories[0].image : "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80"
+        },
+        hero: {
+          badge: "🌸 Raksha Bandhan Special Surprise 🌸",
+          mainHeading: `Happy Rakhi, {SISTER_NAME}! ❤️`,
+          tagline: "Chahe hum kitne bhi door kyu na ho, tera bhai hamesha tere dil ke sabse paas hai.",
+          subtext: "Tere liye ek chhota sa digital surprise banaya hai, scroll karke dekh! ✨"
+        },
+        audio: {
+          enabled: true,
+          songTitle: "Phoolon Ka Taaron Ka (Lata Mangeshkar)",
+          customAudioUrl: "assets/audio/phoolon-ka-taaron-ka.mp3",
+          volume: 0.5
+        },
+        letter: {
+          tag: "For My Dearest Sister",
+          title: letterTitle,
+          paragraphs: letterParagraphs,
+          promisesHeader: "🤞 Bhai ke 4 Pakke Wade (Promises)",
+          promises: letterPromises,
+          closingNote: "Hamesha tera khayal rakhne wala,",
+          signature: `${brotherName} ❤️`
+        },
+        memories: memories,
+        whatsapp: {
+          number: whatsappNumber,
+          messageTemplate: whatsappTemplate
+        },
+        coupons: [
+          {
+            id: "coupon-1",
+            title: "1x Unlimited Swiggy / Food Treat 🍔",
+            description: "Jab bhi bhookh lage, order kar! Bill tera bhai pay karega (No questions asked)!",
+            code: "BHAI-KHILAYEGA-2026",
+            emoji: "🍕",
+            color: "from-rose-500 to-pink-600"
+          },
+          {
+            id: "coupon-2",
+            title: "1x Zero Argument / Bhai Maanega Pass 😇",
+            description: "Poore ek din ke liye tu jo bolegi, bhai bina kisi argue ke haan bolega!",
+            code: "QUEEN-FOR-A-DAY",
+            emoji: "👑",
+            color: "from-amber-500 to-orange-600"
+          },
+          {
+            id: "coupon-3",
+            title: "1x Midnight Ice-Cream & Outing 🍨",
+            description: "Mood kharab ho ya accha, instant late-night ice cream ride bhai ke saath!",
+            code: "CHILL-WITH-BHAI",
+            emoji: "🚗",
+            color: "from-violet-500 to-purple-600"
+          },
+          {
+            id: "coupon-4",
+            title: "1x Assignment & Chore Helper ⚡",
+            description: "Koi bhi boring kaam ho, bhai will come to rescue and help you finish it!",
+            code: "TASK-SAVIOR-PRO",
+            emoji: "🧹",
+            color: "from-emerald-500 to-teal-600"
+          }
+        ],
+        shagun: {
+          badge: "Rakhi Gift",
+          title: "Bhai Ki Taraf Se Shagun Ka Lifafa 💌",
+          message: shagunMessage,
+          giftCardCode: giftCardCode,
+          showUpi: true,
+          upiId: upiId,
+          qrImagePlaceholder: `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(brotherName)}&cu=INR`
+        },
+        footer: {
+          message: "Made with immense love for",
+          tagline: "Happy Raksha Bandhan ❤️"
+        }
+      };
+    }
+
+    function generateCodeString() {
+      const data = getFormData();
+      return `/**
+ * ===================================================================
+ * 🌸 PYARI BEHENA - MASTER CONFIGURATION FILE (config.js) 🌸
+ * Generated automatically via generator.html
+ * ===================================================================
+ */
+
+const CONFIG = ${JSON.stringify(data, null, 2)};
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = CONFIG;
+}
+`;
+    }
+
+    function updatePreview() {
+      document.getElementById('codePreview').innerText = generateCodeString();
+    }
+
+    function generateAndDownload() {
+      const code = generateCodeString();
+      const blob = new Blob([code], { type: 'text/javascript' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'config.js';
+      link.click();
+    }
+
+    function copyConfigToClipboard() {
+      const code = generateCodeString();
+      navigator.clipboard.writeText(code).then(() => {
+        alert("✅ config.js code successfully copied to clipboard! Paste it into your config.js file.");
+      });
+    }
+
+    function addMemoryRow() {
+      const container = document.getElementById('memoriesContainer');
+      const div = document.createElement('div');
+      div.className = "memory-row p-4 bg-zinc-50 rounded-xl border border-zinc-200 space-y-3";
+      div.innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Photo Title</label>
+            <input type="text" class="mem-title w-full p-2 rounded-lg border text-xs" value="Pyari Yaadein ✨">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Date / Tag</label>
+            <input type="text" class="mem-date w-full p-2 rounded-lg border text-xs" value="Memories">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Image URL or Local Path</label>
+            <input type="text" class="mem-image w-full p-2 rounded-lg border text-xs" value="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80">
+          </div>
+        </div>
+        <div>
+          <label class="block text-[11px] font-semibold text-zinc-500 mb-1">Photo Caption</label>
+          <input type="text" class="mem-caption w-full p-2 rounded-lg border text-xs" value="Hamesha khush raho aur muskurati raho!">
+        </div>
+      `;
+      container.appendChild(div);
+      updatePreview();
+    }
+
+    // Auto-update preview on form changes
+    document.getElementById('configForm').addEventListener('input', updatePreview);
+    updatePreview();
+  </script>
+</body>
+</html>

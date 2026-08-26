@@ -5,6 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy Raksha Bandhan, Meri Pyari Behena! 🌸</title>
 
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="Happy Raksha Bandhan, Meri Pyari Behena! 🌸">
+  <meta name="description" content="A special digital Raksha Bandhan surprise from your brother with lots of love, memories, and treat vouchers!">
+  <meta name="theme-color" content="#881337">
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://givemehat.github.io/PyariBehena/">
+  <meta property="og:title" content="Happy Raksha Bandhan, Meri Pyari Behena! 🌸">
+  <meta property="og:description" content="A special digital Raksha Bandhan surprise from your brother with lots of love, memories, and treat vouchers!">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://givemehat.github.io/PyariBehena/">
+  <meta property="twitter:title" content="Happy Raksha Bandhan, Meri Pyari Behena! 🌸">
+  <meta property="twitter:description" content="A special digital Raksha Bandhan surprise from your brother with lots of love, memories, and treat vouchers!">
+  <meta property="twitter:image" content="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80">
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,14 +66,25 @@
   <canvas id="petalCanvas"></canvas>
 
   <!-- ==========================================
+       AUTOPLAY UNLOCK PROMPT TOAST (SHOWN ONLY IF BLOCKED)
+       ========================================== -->
+  <div id="musicPromptToast" class="hidden opacity-0 fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-opacity duration-500 max-w-sm w-[90%] pointer-events-none">
+    <div class="bg-zinc-900/90 text-white backdrop-blur-md px-4 py-2.5 rounded-full shadow-2xl flex items-center justify-center gap-2 text-xs font-medium border border-white/20 text-center animate-bounce-subtle">
+      <span>🎵</span>
+      <span>Tap anywhere to enable sibling music</span>
+      <span>🌸</span>
+    </div>
+  </div>
+
+  <!-- ==========================================
        FLOATING SIBLING SOUNDTRACK (PHOOLON KA TAARON KA)
        ========================================== -->
   <div class="fixed bottom-5 right-5 z-50">
-    <button id="floatingAudioToggle" class="audio-player-pill px-4 py-2.5 rounded-full flex items-center gap-3 border shadow-xl hover:scale-105 active:scale-95 transition-all bg-white/90">
+    <button id="floatingAudioToggle" class="audio-player-pill px-4 py-2.5 rounded-full flex items-center gap-3 border shadow-xl hover:scale-105 active:scale-95 transition-all bg-white/95">
       <div id="audioStatusIcon" class="text-xl">🎵</div>
-      <div class="text-left">
-        <p class="text-[10px] uppercase font-bold tracking-wider text-rose-600">Phoolon Ka Taaron Ka</p>
-        <p class="text-xs font-semibold text-zinc-700">Click to Play Music</p>
+      <div class="text-left hidden sm:block">
+        <p id="audioTrackTitle" class="text-[10px] uppercase font-bold tracking-wider text-rose-600 truncate max-w-[140px]">Phoolon Ka Taaron Ka</p>
+        <p id="audioButtonSubtext" class="text-xs font-semibold text-zinc-700">Playing • Tap to Mute</p>
       </div>
     </button>
   </div>
@@ -62,7 +92,7 @@
   <!-- ==========================================
        TOP BAR
        ========================================== -->
-  <header class="w-full sticky top-0 z-40 backdrop-blur-md bg-white/75 border-b border-amber-200/50 px-4 py-3.5">
+  <header class="w-full sticky top-0 z-40 backdrop-blur-md bg-white/80 border-b border-amber-200/50 px-4 py-3.5 shadow-sm">
     <div class="max-w-4xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-2">
         <span class="text-2xl animate-spin-slow">🌸</span>
@@ -87,20 +117,20 @@
     <!-- Heartfelt Sibling Badge -->
     <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-rose-100 via-amber-50 to-rose-100 border border-amber-300 shadow-sm text-xs font-semibold text-rose-800 mb-5 animate-float">
       <span>✨</span>
-      <span>World's Best Sister Ever 👑</span>
+      <span id="heroBadgeText" class="conf-relation-badge">World's Best Sister Ever 👑</span>
       <span>✨</span>
     </div>
 
     <!-- Main Heading -->
-    <h1 class="text-3xl sm:text-5xl font-bold font-decorative maroon-gradient-text tracking-wide leading-tight mb-3">
+    <h1 id="heroHeading" class="text-3xl sm:text-5xl font-bold font-decorative maroon-gradient-text tracking-wide leading-tight mb-3">
       Happy Rakhi, <span class="conf-sister-name gold-gradient-text">Gudiya</span>! 🌸
     </h1>
 
-    <p class="text-base sm:text-lg text-zinc-700 font-medium max-w-xl mx-auto mb-2 leading-relaxed">
+    <p id="heroTagline" class="text-base sm:text-lg text-zinc-700 font-medium max-w-xl mx-auto mb-2 leading-relaxed">
       Chahe hum kitne bhi door kyu na ho, tera bhai hamesha tere dil ke sabse paas hai! ❤️
     </p>
 
-    <p class="text-xs sm:text-sm text-zinc-500 max-w-md mx-auto mb-6 italic">
+    <p id="heroSubtext" class="text-xs sm:text-sm text-zinc-500 max-w-md mx-auto mb-6 italic">
       Tere liye ek chhota sa digital surprise banaya hai, scroll karke dekh... ✨
     </p>
 
@@ -162,7 +192,7 @@
       <!-- Letter Header -->
       <div class="flex items-center justify-between border-b border-amber-100 pb-3 mb-5">
         <div>
-          <span class="text-[10px] font-bold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded border border-rose-200">
+          <span id="letterTag" class="text-[10px] font-bold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded border border-rose-200">
             For My Dearest Sister
           </span>
           <h3 class="font-heading font-bold text-base sm:text-lg text-zinc-900 mt-1">
@@ -179,9 +209,9 @@
         <!-- Dynamic paragraphs from config.js -->
       </div>
 
-      <!-- 4 Brotherly Promises -->
+      <!-- Brotherly Promises -->
       <div class="mt-6 pt-5 border-t border-dashed border-amber-200">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-amber-800 mb-2.5">
+        <h4 id="letterPromisesHeader" class="text-xs font-bold uppercase tracking-wider text-amber-800 mb-2.5">
           🤞 Bhai ke 4 Pakke Wade (Promises)
         </h4>
         <ul id="letterPromisesList" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -249,7 +279,7 @@
       <span class="text-xs font-bold uppercase tracking-widest text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
         Rakhi Gift
       </span>
-      <h2 class="text-2xl sm:text-3xl font-bold font-heading text-zinc-900 mt-2">
+      <h2 id="shagunTitle" class="text-2xl sm:text-3xl font-bold font-heading text-zinc-900 mt-2">
         🎁 Bhai Ki Taraf Se Shagun Ka Lifafa
       </h2>
     </div>
@@ -281,10 +311,10 @@
         </div>
 
         <!-- UPI Option -->
-        <div class="border-t border-amber-100 pt-4">
+        <div id="shagunUpiContainer" class="border-t border-amber-100 pt-4">
           <p class="text-[11px] font-bold text-zinc-500 mb-2">Direct UPI Shagun:</p>
           <div class="w-28 h-28 mx-auto bg-white p-1.5 rounded-xl border border-amber-200 shadow-sm">
-            <img id="shagunQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=brother@upi&pn=Bhai&cu=INR" alt="UPI QR" class="w-full h-full object-contain">
+            <img id="shagunQrImage" src="" alt="UPI QR" loading="lazy" class="w-full h-full object-contain">
           </div>
           <p class="text-[10px] text-zinc-500 mt-1.5 font-mono">
             UPI: <span id="shagunUpiText" class="font-bold text-zinc-800">brother@upi</span>
@@ -303,7 +333,7 @@
         ✕
       </button>
       <div class="rounded-2xl overflow-hidden aspect-[4/3] bg-zinc-100">
-        <img id="lightboxImg" src="" alt="Memory" class="w-full h-full object-cover">
+        <img id="lightboxImg" src="" alt="Memory" loading="lazy" class="w-full h-full object-cover">
       </div>
       <div class="mt-3 text-center">
         <span id="lightboxDate" class="text-[10px] font-bold text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-full"></span>
