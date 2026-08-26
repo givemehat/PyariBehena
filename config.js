@@ -138,6 +138,7 @@ const CONFIG = {
     message: "Bhai se shagun maangne ka digital tarika! Amount choose karo aur direct request bhej do!",
     brotherUpiId: "brother@upi",
     giftCardCode: "RAKHI-2026-BHAI-TREAT",
+    giftCardPromise: "Tum is coupon ko sirf ek baar (1-time only) use kar sakti ho! Jab bhi redeem karogi, poore din ke liye tum jo bologi bhai bina kisi argue ke tumhari har baat maanega! Par dhyaan se socho kab use karna hai, kyunki ye pass sirf ek baar chalega! 😉❤️",
     quickAmounts: [501, 1100, 2100, 5000],
     defaultNote: "Shopping aur treat ke liye shagun bhejo bhaiya! 🛍️❤️"
   },

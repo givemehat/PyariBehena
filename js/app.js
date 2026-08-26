@@ -110,6 +110,11 @@ class RakhiApp {
       if (bhaiUpiEl && CONFIG.shagun.brotherUpiId) {
         bhaiUpiEl.innerText = CONFIG.shagun.brotherUpiId;
       }
+
+      const promiseTextEl = document.getElementById('shagunPromiseText');
+      if (promiseTextEl && CONFIG.shagun.giftCardPromise) {
+        promiseTextEl.innerHTML = `<strong class="font-bold text-rose-950">Special Bhai Promise:</strong> ${CONFIG.shagun.giftCardPromise}`;
+      }
     }
   }
 

@@ -372,18 +372,26 @@
           </div>
         </div>
 
-        <!-- Gift Voucher Code Box -->
-        <div class="border-t border-amber-100 pt-4">
-          <div class="p-3 bg-amber-50 rounded-xl border-2 border-dashed border-amber-300 flex items-center justify-between">
+        <!-- Gift Voucher Code Box with Golden Sibling Promise -->
+        <div class="border-t border-amber-100 pt-4 space-y-2.5">
+          <div class="p-3.5 bg-amber-50 rounded-2xl border-2 border-dashed border-amber-300 flex items-center justify-between shadow-sm">
             <div class="text-left">
-              <span class="text-[9px] font-bold text-zinc-400 uppercase">Bhai's Shopping Voucher</span>
-              <div id="shagunGiftCode" class="text-xs sm:text-sm font-extrabold text-rose-700 font-mono tracking-wider">
+              <span class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider">🎟️ Special Golden Voucher</span>
+              <div id="shagunGiftCode" class="text-sm sm:text-base font-extrabold text-rose-700 font-mono tracking-wider mt-0.5">
                 RAKHI-2026-BHAI-TREAT
               </div>
             </div>
-            <button onclick="window.rakhiApp.copyShagunCode()" class="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-lg shadow">
-              📋 Copy
+            <button onclick="window.rakhiApp.copyShagunCode()" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl shadow transition active:scale-95">
+              📋 Copy Code
             </button>
+          </div>
+
+          <!-- Bhai's Special Promise Note for this Coupon -->
+          <div class="p-3.5 bg-rose-50/90 rounded-xl border border-rose-200 text-left text-xs text-rose-900 leading-relaxed shadow-xs flex items-start gap-2.5">
+            <span class="text-base flex-shrink-0 mt-0.5">👑</span>
+            <p id="shagunPromiseText">
+              <strong class="font-bold text-rose-950">Special Bhai Promise:</strong> Tum is coupon ko <strong>sirf ek baar (1-time only)</strong> use kar sakti ho! Jab bhi redeem karogi, poore din ke liye tum jo bologi bhai bina kisi argue ke tumhari har baat maanega! Par dhyaan se socho kab use karna hai, kyunki ye pass sirf ek baar chalega! 😉❤️
+            </p>
           </div>
         </div>
 
