@@ -100,10 +100,15 @@ class RakhiApp {
       if (heroSubtext && CONFIG.hero.subtext) heroSubtext.innerText = CONFIG.hero.subtext;
     }
 
-    // Shagun Voucher Code
+    // Shagun Voucher Code & Brother's Registered UPI Display
     if (CONFIG.shagun) {
       const giftCode = document.getElementById('shagunGiftCode');
       if (giftCode && CONFIG.shagun.giftCardCode) giftCode.innerText = CONFIG.shagun.giftCardCode;
+
+      const bhaiUpiEl = document.getElementById('bhaiDisplayUpi');
+      if (bhaiUpiEl && CONFIG.shagun.brotherUpiId) {
+        bhaiUpiEl.innerText = CONFIG.shagun.brotherUpiId;
+      }
     }
   }
 
@@ -225,7 +230,7 @@ class RakhiApp {
     });
   }
 
-  /* ─── RENDER 4 SIBLING TRAITS (ANOKHI BONDING) ─── */
+  /* ─── RENDER 4 SIBLING TRAITS ─── */
   renderTraits() {
     const grid = document.getElementById('traitsGrid');
     if (!grid || !Array.isArray(CONFIG.traits)) return;
@@ -363,6 +368,17 @@ class RakhiApp {
       return;
     }
 
+    // Get brother's exact target WhatsApp number
+    let phone = (CONFIG.whatsapp && CONFIG.whatsapp.number) ? CONFIG.whatsapp.number.replace(/[^0-9]/g, '') : '';
+    if (!phone || phone === "919876543210") {
+      const inputPhone = prompt("Enter Bhai's 10-digit WhatsApp Phone Number (to send request directly to him):", "");
+      if (!inputPhone) return;
+      phone = inputPhone.replace(/[^0-9]/g, '');
+      if (phone.length === 10) phone = '91' + phone;
+      if (!CONFIG.whatsapp) CONFIG.whatsapp = {};
+      CONFIG.whatsapp.number = phone;
+    }
+
     const upiPayUrl = `upi://pay?pa=${encodeURIComponent(sisterUpi)}&pn=${encodeURIComponent(sisterName)}&am=${encodeURIComponent(amount)}&tn=${encodeURIComponent(note)}&cu=INR`;
 
     const qrContainer = document.getElementById('sisterQrContainer');
@@ -377,14 +393,7 @@ class RakhiApp {
     const whatsappMsg = `Hey ${brotherName}! 🌸\nMaine Raksha Bandhan special website se shagun request kiya hai:\n\n💸 *Amount: ₹${amount}*\n💌 *Note:* ${note}\n📲 *My UPI ID:* ${sisterUpi}\n\n👉 *Bhai Click Here to 1-Tap Pay directly via UPI:*\n${upiPayUrl}\n\nLove you Bhai! Jaldi approve karo! 😋❤️`;
 
     const encodedText = encodeURIComponent(whatsappMsg);
-    const phone = (CONFIG.whatsapp && CONFIG.whatsapp.number) ? CONFIG.whatsapp.number.replace(/[^0-9]/g, '') : '';
-
-    let url = '';
-    if (phone && phone.length >= 7) {
-      url = `https://wa.me/${phone}?text=${encodedText}`;
-    } else {
-      url = `https://api.whatsapp.com/send?text=${encodedText}`;
-    }
+    const url = `https://wa.me/${phone}?text=${encodedText}`;
 
     window.open(url, '_blank');
   }
@@ -433,8 +442,10 @@ class RakhiApp {
       CONFIG.brotherName = brotherInput.value.trim();
     }
     if (whatsappInput && whatsappInput.value.trim()) {
+      let num = whatsappInput.value.trim().replace(/[^0-9]/g, '');
+      if (num.length === 10) num = '91' + num;
       if (!CONFIG.whatsapp) CONFIG.whatsapp = {};
-      CONFIG.whatsapp.number = whatsappInput.value.trim();
+      CONFIG.whatsapp.number = num;
     }
     if (brotherUpiInput && brotherUpiInput.value.trim()) {
       if (!CONFIG.shagun) CONFIG.shagun = {};
