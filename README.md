@@ -1,7 +1,7 @@
 # 🌸 Pyari Behena (प्यारी बहना) - Raksha Bandhan Special Gift Website 🪔
 
-> **A heartfelt, interactive, and customizable digital Raksha Bandhan surprise website for your sister.**  
-> *Specially crafted for brothers living away from home (or anyone wanting to surprise their sister with a modern, emotional, and interactive digital gift!).*
+> **A heartfelt, elegant, and customizable digital Raksha Bandhan surprise website for your sister.**  
+> *Crafted for brothers who want to send a genuine, emotional, and loving surprise to their sisters!*
 
 ---
 
@@ -15,23 +15,16 @@
 
 ## ✨ Features
 
-- 🪔 **Interactive Virtual Rakhi & Puja Thali**:
-  - Step 1: Apply Auspicious Roli-Chandan **Tilak & Akshat** on screen.
-  - Step 2: Tie a Designer Silk **Rakhi** on the virtual wrist with glowing particle effects.
-  - Step 3: Perform **Aarti** with a golden diya & temple bell chimes.
-  - Step 4: Feed virtual **Kaju Katli / Sweets** with celebratory confetti!
 - 💌 **"Ek Pyara Sa Sandesh" (Bhai Ki Chitthi)**:
   - Heartfelt parchment letter with wax seal, sibling memories, and 4 lifelong brotherly promises.
 - 📸 **Nostalgic Memory Lane Scrapbook**:
   - Vintage polaroid photo gallery with tilt hover, sticky notes, and interactive lightbox zoom.
 - 🎟️ **Sibling Privilege Passes (Vouchers)**:
   - Tap-to-reveal digital coupons (e.g., *Unlimited Swiggy Treat*, *Zero Argument Pass*, *Late-Night Ice Cream Ride*) with instant **1-Tap WhatsApp Claim** button.
-- 🧠 **"How Well Do You Know Your Bhai?" Quiz**:
-  - Interactive sibling trivia with instant funny reactions and score celebration.
 - 🎁 **Digital Shagun Lifafa**:
   - Amazon/Shopping voucher code + UPI QR code for direct gift shagun.
-- 🎵 **Built-in Sibling Soundtrack & Audio Synthesizer**:
-  - Flute/lofi sibling music + zero-dependency Web Audio API bells, chimes, and celebration fanfares (works 100% offline).
+- 🎵 **Built-in Sibling Soundtrack**:
+  - Lata Mangeshkar's iconic *"Phoolon Ka Taaron Ka"* background soundtrack with floating player.
 - 🌸 **Canvas Particle Effects**:
   - Falling Marigold & Rose flower petals, mouse sparkle trails, and fireworks confetti.
 
@@ -49,8 +42,8 @@ cd PyariBehena
 
 ### Step 2: Edit `config.js`
 Open `config.js` in VS Code or Notepad and change:
-- **`sisterName`**: Apni behen ka naam daalein (e.g., `"Priya"`)
-- **`brotherName`**: Apna naam daalein (e.g., `"Aman"`)
+- **`sisterName`**: Apni behen ka naam daalein (e.g., `"Priya"`, `"Gudiya"`)
+- **`brotherName`**: Apna naam daalein (e.g., `"Aman"`, `"Tera Bhai"`)
 - **`letter`**: Apne dil ki baat aur sandesh likhein.
 - **`memories`**: Apni photos ke links ya local files daalein (`image: "assets/images/photo1.jpg"`).
 - **`coupons`**: Apne customized treats aur passes set karein.
@@ -92,39 +85,16 @@ PyariBehena/
 ├── config.js         # Single master file for all text, photos & gifts
 ├── css/
 │   ├── style.css     # Festive aesthetics, glassmorphism, polaroids
-│   └── animations.css# Petals, diya flame, tilak & rakhi animations
+│   └── animations.css# Petals, rakhi glow & subtle animations
 ├── js/
 │   ├── app.js        # Dynamic data binding & modals
-│   ├── ritual.js     # Interactive Puja Thali & ceremony
 │   ├── coupons.js    # Privilege passes & WhatsApp claims
 │   ├── effects.js    # Canvas falling petals & sparkles
-│   └── audio.js      # Web Audio API synthesizer & music player
+│   └── audio.js      # Web Audio API & soundtrack player
+├── assets/
+│   └── audio/        # Phoolon Ka Taaron Ka background soundtrack
 ├── DEPLOYMENT_AND_CUSTOMIZATION_GUIDE.md # Detailed user guide
 └── README.md         # Tutorial & setup guide
-```
-
----
-
-## 🎥 YouTube Video Template & Description
-
-Aap apne YouTube video ke description me ye text use kar sakte hain:
-
-```markdown
-🎁 Raksha Bandhan Special Surprise Website for Sisters! 🌸
-Is video me maine ek aesthetic, emotional aur interactive Raksha Bandhan gift website banayi hai jise aap 2 minute me clone karke apni sister ke naam se customize kar sakte hain.
-
-🔗 GitHub Repo: https://github.com/givemehat/PyariBehena
-⚡ Live Demo: https://givemehat.github.io/PyariBehena/
-📖 Setup Guide: https://github.com/givemehat/PyariBehena/blob/main/DEPLOYMENT_AND_CUSTOMIZATION_GUIDE.md
-
-Features:
-- Virtual Rakhi & Aarti Ceremony
-- Emotional Letter with Bhai's Promises
-- Polaroid Photo Scrapbook
-- Sibling Privilege Vouchers (Direct WhatsApp claim!)
-- Shagun Lifafa (UPI / Amazon Gift Card)
-
-Don't forget to Like, Share & Subscribe! ❤️
 ```
 
 ---

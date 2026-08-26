@@ -31,19 +31,7 @@ const CONFIG = {
     customAudioUrl: "assets/audio/phoolon-ka-taaron-ka.mp3"
   },
 
-  // ─── 4. VIRTUAL RAKHI & PUJA THALI ───────────────────────────────
-  ceremony: {
-    title: "🪔 Pyari Rakhi & Shubh Tilak",
-    subtitle: "Door hu toh kya hua, chal digital thali se Rakhi bandh aur aashirwad le!",
-    steps: [
-      { id: "tilak", name: "Shubh Tilak", icon: "🔴", desc: "Roli aur Akshat ka tilak" },
-      { id: "rakhi", name: "Pavitra Rakhi", icon: "🧵", desc: "Resham ka pavitra dhaga" },
-      { id: "aarti", name: "Mangal Aarti", icon: "🪔", desc: "Diye se mangal aarti" },
-      { id: "sweet", name: "Mithai", icon: "🍬", desc: "Virtual Kaju Katli" }
-    ]
-  },
-
-  // ─── 5. BHAI KI CHITTHI (The Emotional Letter) ───────────────────
+  // ─── 4. BHAI KI CHITTHI (The Emotional Letter) ───────────────────
   letter: {
     title: "Pyari Behena ke Naam, Bhai Ki Chitthi 💌",
     paragraphs: [
